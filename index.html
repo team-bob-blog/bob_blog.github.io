@@ -9,3 +9,16 @@ no_excerpt: false
 hide_image: false
 cover: true
 ---
+> <ul class="post-list">
+  {% for post in site.posts %}
+    <li>
+      <h2>
+        <a href="{{ post.url | relative_url }}">
+          {{ post.title }}
+        </a>
+      </h2>
+      <span>{{ post.date | date_to_string }}</span>
+      <p>{{ post.excerpt }}</p>
+    </li>
+  {% endfor %}
+</ul>
