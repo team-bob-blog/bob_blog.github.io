@@ -12,3 +12,31 @@
     margin: 1rem 0;
   }
 }
+
+// file: _sass/my-style.scss
+
+// 1. 작성자 이름별 색상 정의
+.author-blue {
+    color: #007bff; // 파랑
+}
+
+.author-green {
+    color: #28a745; // 초록
+}
+
+.author-purple {
+    color: #6f42c1; // 보라
+}
+
+.author-navy {
+    color: #001f3f; // 조금 진한 남색
+}
+
+.author-orange {
+    color: #fd7e14; // 주황색
+}
+
+// 2. (선택 사항) 기본값
+.author-default {
+    color: #333;
+}

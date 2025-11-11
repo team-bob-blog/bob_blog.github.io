@@ -1,167 +1,139 @@
 ---
-layout: about
-image: /assets/img/blog/hydejack-9.jpg
+layout: page
+title: Team - 우리 팀 소개
 description: >
-  A boutique Jekyll theme for hackers, nerds, and academics,
-  with a focus on personal sites that are meant to impress.
+  함께 git blog를 운영하는 팀원들을 소개합니다.
 hide_description: true
-redirect_from:
-  - /download/
+sitemap: false
 ---
 
-# About
+<div style="max-width: 800px; margin: 0 auto; padding: 20px;">
 
-<!--author-->
+<h2 style="text-align: center; margin-bottom: 5px;">팀원 소개</h2>
+<p style="text-align: center; color: #777;">
+구미 3반 블로그 정예 멤버들 환영합니다!! <br>
+우리 스터디는 개인적인 CS 공부를 블로그를 통해 정리하면서 <br>
+스터디 구성원에게 본인의 지식을 알려주는 스터디 입니다.</p>
 
-## Hydejack
+<hr style="border-top: 3px double #ddd; margin: 40px 0;">
 
-A boutique Jekyll theme for hackers, nerds, and academics.  
-{:.lead}
+<div class="team-member-card" style="margin-bottom: 50px;">
+    
+    <h3 style="text-align: center; font-size: 1.5em; margin-bottom: 25px;">1. 김강연</h3>
 
-1. this list will be replaced by the toc
-{:toc .large-only}
+    <div style="text-align: center;">
+      <img 
+        src="/assets/img/profile/김강연.png" 
+        alt="김강연 프로필 이미지: 카피바라가 노트북으로 코딩하는 모습" 
+        style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    </div>
 
-![Screenshot](/assets/img/blog/hydejack-9.jpg){:.lead width="1920" height="1080" loading="lazy"}
+    <p style="text-align: center; font-size: 1.1em; margin-top: 30px;">
+        파이썬 심화 학습 내용 및 백엔드 관련 기술에 대한 공부 내용 업로드 하기
+    </p>
+    <p style="text-align: center; font-size: 1.1em; margin-top: 5px;">
+        블로그 작성 습관 만들기
+    </p>
 
-Hydejack's cover page on a variety of screen sizes.
-{:.figcaption}
+    <p style="text-align: center; font-size: 1.1em; font-weight: bold; margin-top: 20px;">
+        블로그 주소: <a href="https://derek0517.tistory.com/" target="_blank" style="font-weight: normal;">derek0517.tistory.com/</a>
+    </p>
+</div>
 
+<hr style="border-top: 1px solid #eee; margin: 40px 0;">
 
-**Hydejack** is a boutique [Jekyll] theme for hackers, nerds, and academics, with a focus on personal sites that are meant to impress. 
+<div class="team-member-card" style="margin-bottom: 50px;">
+    
+    <h3 style="text-align: center; font-size: 1.5em; margin-bottom: 25px;">2. 장진욱</h3>
 
-It includes a blog that is suitable for both prose and technical documentation, a portfolio to showcase your projects, and a resume template that looks amazing on the web and in print.
+    <div style="text-align: center;">
+      <img 
+        src="/assets/img/profile/장진욱.png" 
+        alt="장진욱 프로필 이미지: 검은 후드를 쓴 키위 새 모습" 
+        style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    </div>
 
-> Your complete presence on the web — A [blog], [portfolio], and [resume].
-{:.lead}
+    <p style="text-align: center; font-size: 1.1em; margin-top: 30px;">
+        알고리즘 스터디 내용은 당일에 바로 작성하기
+    </p>
+    <p style="text-align: center; font-size: 1.1em; margin-top: 5px;">
+        스터디 이외 주제로 주 1회 이상 작성하기
+    </p>
 
+    <p style="text-align: center; font-size: 1.1em; font-weight: bold; margin-top: 20px;">
+        블로그 주소: <a href="https://jjw3300.tistory.com/" target="_blank" style="font-weight: normal;">jjw3300.tistory.com/</a>
+    </p>
+</div>
 
-## A Personal Site That Won't Disappear
+<hr style="border-top: 1px solid #eee; margin: 40px 0;">
 
-**Hydejack** is 100% built on Open Source software, and is Open Source itself, save for parts of the PRO version. The PRO version is a one-time payment that gives you the right to use it forever.
+<div class="team-member-card" style="margin-bottom: 50px;">
+    
+    <h3 style="text-align: center; font-size: 1.5em; margin-bottom: 25px;">3. 정수민</h3>
 
-Hydejack is all static sites. _HTML_. All you need is a web server — any web server — to have a professional web presence that lasts a lifetime.
+    <div style="text-align: center;">
+      <img 
+        src="/assets/img/profile/정수민.png" 
+        alt="정수민 프로필 이미지: 감자가 노트북으로 코딩하는 모습" 
+        style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    </div>
 
+    <p style="text-align: center; font-size: 1.1em; margin-top: 30px;">
+        항상 1등한다는 마인드
+    </p>
 
-## A Free Blogging Theme
-**Hydejack** started out as a free blogging theme for Jekyll — and continues to be so.
+    <p style="text-align: center; font-size: 1.1em; font-weight: bold; margin-top: 20px;">
+        블로그 주소: <a href="https://ss-coding-99.tistory.com/" target="_blank" style="font-weight: normal;">ss-coding-99.tistory.com/</a>
+    </p>
+</div>
 
-<!--posts-->
+<hr style="border-top: 1px solid #eee; margin: 40px 0;">
 
+<div class="team-member-card" style="margin-bottom: 50px;">
+    
+    <h3 style="text-align: center; font-size: 1.5em; margin-bottom: 25px;">4. 배재유</h3>
 
-## An Impressive Portfolio
-A portfolio that's guaranteed to be impressive — no matter what you put into it.
+    <div style="text-align: center;">
+      <img 
+        src="/assets/img/profile/배재유.png" 
+        alt="배재유 프로필 이미지: 근육질 보디빌더 사진" 
+        style="width: 300px; height: 450px; max-width: 100%; border-radius: 5px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    </div>
 
-<!--projects-->
+    <p style="text-align: center; font-size: 1.1em; margin-top: 30px;">
+        개발자의 꿈은 기록하다.
+    </p>
+    <p style="text-align: center; font-size: 1.1em; margin-top: 5px;">
+        습관으로 만들자
+    </p>
 
+    <p style="text-align: center; font-size: 1.1em; font-weight: bold; margin-top: 20px;">
+        블로그 주소: <a href="https://platypus3036.tistory.com/" target="_blank" style="font-weight: normal;">platypus3036.tistory.com/</a>
+    </p>
+</div>
 
-## A Printable Resume
-Get a resume that's consistent across the board — whether it's on the web, mobile, print, or [PDF](/assets/Resume.pdf).
+<hr style="border-top: 1px solid #eee; margin: 40px 0;">
 
-[![Resume PDF](/assets/img/blog/resume.png){:.lead width="884" height="632" loading="lazy"}][resume]{:.no-hover.no-mark}
+<div class="team-member-card" style="margin-bottom: 50px;">
+    
+    <h3 style="text-align: center; font-size: 1.5em; margin-bottom: 25px;">5. 김민재</h3>
 
-Front and center page of a print resume generated by Hydejack.
-{:.figcaption}
+    <div style="text-align: center;">
+      <img 
+        src="/assets/img/profile/김민재.png" 
+        alt="김민재 프로필 이미지: 쿠키를 물고 있는 애니메이션 캐릭터" 
+        style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    </div>
 
+    <p style="text-align: center; font-size: 1.1em; margin-top: 30px;">
+        스스로 학습하고 정리하는 관성 만들기
+    </p>
 
-## Just Markdown
-Write all content with Markdown. __Hydejack__ gives you [additional CSS classes](docs/writing.md) to stylize your content, without losing compatibility with other Jekyll themes.
+    <p style="text-align: center; font-size: 1.1em; font-weight: bold; margin-top: 20px;">
+        블로그 주소: <a href="https://blopz.tistory.com/" target="_blank" style="font-weight: normal;">blopz.tistory.com/</a>
+    </p>
+</div>
 
+<hr style="border-top: 3px double #ddd; margin: 40px 0;">
 
-## Just Markup
-**Hydejack** boasts a plethora of modern JavaScript, but make no mistake: It's still a _plain old web page_ at its core. It works without JavaScript and you can even view it in a text-based browser like `w3m`:
-
-![w3m Screenshot](/assets/img/blog/w3m.png){:.tail width="1920" height="1260" loading="lazy"}
-
-The Hydejack blog, as seen by the text browser `w3m`.
-{:.figcaption}
-
-
-## Syntax Highlighting
-**Hydejack** features syntax highlighting, powered by [Rouge].
-
-```html
-<!-- file: `_includes/my-body.html` -->
-<script type="module">
-  document.querySelector("hy-push-state").addEventListener("hy-push-state-load", () => {
-    const supportsCodeHighlights = false; // TBD!!
-  });
-</script>
-```
-
-Code blocks can have a filename and a caption.
-{:.figcaption}
-
-
-## Beautiful Math
-They say math is beautiful — and with **Hydejack**'s [math support][math] it's guaranteed to also look beautiful:
-
-$$
-\begin{aligned}
-  \phi(x,y) &= \phi \left(\sum_{i=1}^n x_ie_i, \sum_{j=1}^n y_je_j \right) \\[2em]
-            &= \sum_{i=1}^n \sum_{j=1}^n x_i y_j \phi(e_i, e_j)            \\[2em]
-            &= (x_1, \ldots, x_n)
-               \left(\begin{array}{ccc}
-                 \phi(e_1, e_1)  & \cdots & \phi(e_1, e_n) \\
-                 \vdots          & \ddots & \vdots         \\
-                 \phi(e_n, e_1)  & \cdots & \phi(e_n, e_n)
-               \end{array}\right)
-               \left(\begin{array}{c}
-                 y_1    \\
-                 \vdots \\
-                 y_n
-               \end{array}\right)
-\end{aligned}
-$$
-
-Hydejack uses KaTeX to efficiently render math.
-{:.figcaption}
-
-
-## Features
-
-{% include features.md %}
-
-
-## Download
-
-{% include table.md %}
-
-
-## Get It Now
-
-Use the the form below to purchase Hydejack PRO:
-
-<div class="gumroad-product-embed" data-gumroad-product-id="nuOluY"><a href="https://gumroad.com/l/nuOluY">Loading…</a></div>
-
-[jekyll]: https://jekyllrb.com
-
-[blog]: /
-[portfolio]: https://hydejack.com/examples/
-[resume]: https://hydejack.com/resume/
-[download]: https://hydejack.com/download/
-[welcome]: https://hydejack.com/
-[forms]: https://hydejack.com/forms-by-example/
-
-[features]: #features
-[news]: #build-an-audience
-[syntax]: #syntax-highlighting
-[latex]: #beautiful-math
-[dark]: https://hydejack.com/blog/hydejack/2018-09-01-introducing-dark-mode/
-[search]: https://hydejack.com/#_search-input
-[grid]: https://hydejack.com/blog/hydejack/
-
-[lic]: LICENSE.md
-[pro]: licenses/PRO.md
-[docs]: docs/README.md
-[ofln]: docs/advanced.md#enabling-offline-support
-[math]: docs/writing.md#adding-math
-
-[kit]: https://github.com/hydecorp/hydejack-starter-kit/releases
-[src]: https://github.com/hydecorp/hydejack
-[gem]: https://rubygems.org/gems/jekyll-theme-hydejack
-[buy]: https://gum.co/nuOluY
-
-[gpss]: https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Fhydejack.com%2Fdocs%2F
-[rouge]: http://rouge.jneen.net
-[katex]: https://khan.github.io/KaTeX/
-[mathjax]: https://www.mathjax.org/
+</div>
