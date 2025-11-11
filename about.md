@@ -23,7 +23,7 @@ sitemap: false
 
     <div style="text-align: center;">
       <img 
-        "{{ '/assets/img/profile/김강연.png' | relative_url }}"
+        src = "{{ '/assets/img/profile/김강연.png' | relative_url }}"
         alt="김강연 프로필 이미지: 카피바라가 노트북으로 코딩하는 모습" 
         style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
     </div>
@@ -48,7 +48,7 @@ sitemap: false
 
     <div style="text-align: center;">
       <img 
-        "{{ '/assets/img/profile/장진욱.png' | relative_url }}"
+        src = "{{ '/assets/img/profile/장진욱.png' | relative_url }}"
         alt="장진욱 프로필 이미지: 검은 후드를 쓴 키위 새 모습" 
         style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
     </div>
@@ -73,7 +73,7 @@ sitemap: false
 
     <div style="text-align: center;">
       <img 
-        "{{ '/assets/img/profile/정수민.png' | relative_url }}"
+        src = "{{ '/assets/img/profile/정수민.png' | relative_url }}"
         alt="정수민 프로필 이미지: 감자가 노트북으로 코딩하는 모습" 
         style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
     </div>
@@ -95,7 +95,7 @@ sitemap: false
 
     <div style="text-align: center;">
       <img 
-        "{{ '/assets/img/profile/배재유.png' | relative_url }}"
+        src = "{{ '/assets/img/profile/배재유.png' | relative_url }}"
         alt="배재유 프로필 이미지: 근육질 보디빌더 사진" 
         style="width: 300px; height: 450px; max-width: 100%; border-radius: 5px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
     </div>
@@ -120,7 +120,7 @@ sitemap: false
 
     <div style="text-align: center;">
       <img 
-        "{{ '/assets/img/profile/김민재.png' | relative_url }}"
+        src = "{{ '/assets/img/profile/김민재.png' | relative_url }}"
         alt="김민재 프로필 이미지: 쿠키를 물고 있는 애니메이션 캐릭터" 
         style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
     </div>
