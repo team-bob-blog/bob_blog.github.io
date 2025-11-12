@@ -169,9 +169,9 @@ const posts = [
         date: "{{ post.date | date: '%Y-%m-%d' }}",
         title: "{{ post.title | escape }}",
         url: "{{ post.url | relative_url }}",
-        fullUrl: "{{ site.url }}{{ site.baseurl }}{{ post.url }}",
-        author: "{{ post.author }}",
-        authorName: "{{ site.data.authors[post.author].name }}"
+        fullUrl: "{% if site.url %}{{ site.url }}{% endif %}{% if site.baseurl %}{{ site.baseurl }}{% endif %}{{ post.url }}",
+        author: "{{ post.author | default: 'unknown' }}",
+        authorName: "{% if post.author and site.data.authors[post.author] %}{{ site.data.authors[post.author].name }}{% else %}{{ post.author | default: '작성자 미상' }}{% endif %}"
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
 ];
