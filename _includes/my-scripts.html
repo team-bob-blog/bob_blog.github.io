@@ -1,0 +1,49 @@
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+
+<script>
+  // DOM이 로드된 후 또는 Hydejack의 페이지 전환 후 실행
+  function initializePreviewLinks() {
+    // 모든 preview-link 클래스를 가진 요소 찾기
+    const previewLinks = document.querySelectorAll('.preview-link[data-preview-url]');
+
+    previewLinks.forEach(link => {
+      const url = link.getAttribute('data-preview-url');
+      
+      // Tippy.js 초기화
+      tippy(link, {
+        content: '로딩 중...', // 기본 로딩 메시지
+        allowHTML: true,
+        animation: 'fade',
+        trigger: 'mouseenter', // 마우스를 올렸을 때 활성화
+        theme: 'light-border',
+        interactive: true,
+        // 미리보기 콘텐츠 로드 로직
+        onShow(instance) {
+          // 이미 로드된 콘텐츠가 있다면 다시 로드하지 않음
+          if (instance.state.isLoaded) return;
+          
+          // 외부 URL 콘텐츠를 iframe에 넣어 미리보기 (보안상의 이유로 제한될 수 있음)
+          // iframe 대신, URL만 표시하거나 간단한 메타데이터(Oembed)를 가져오는 것이 권장됩니다.
+          const iframeHtml = `
+            <div style="padding: 10px; max-width: 300px;">
+              <p style="font-weight: bold; margin-bottom: 5px;">외부 링크 미리보기</p>
+              <iframe src="${url}" width="300" height="200" style="border: none; margin: 0; padding: 0;"></iframe>
+              <p style="font-size: 0.8em; margin-top: 5px;">원본: ${url.substring(0, 40)}...</p>
+            </div>
+          `;
+          
+          instance.setContent(iframeHtml);
+          instance.state.isLoaded = true;
+        }
+      });
+    });
+  }
+
+  // 초기 페이지 로드 시 실행
+  initializePreviewLinks();
+
+  // Hydejack의 Push State 이벤트 리스너 등록
+  // 페이지가 전환될 때마다 스크립트를 다시 초기화해야 함
+  document.getElementById('_pushState').addEventListener('hy-push-state-load', initializePreviewLinks);
+</script>

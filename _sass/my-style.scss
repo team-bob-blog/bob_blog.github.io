@@ -40,3 +40,15 @@
 .author-default {
     color: #333;
 }
+
+.page-header h1,
+.page-header h2 {
+  /* 현재 크기보다 작게 설정 (예: 2rem 또는 2.5rem으로 변경) */
+  font-size: 1.5rem; 
+  line-height: 1.2;
+}
+
+/* 포스트 목록 페이지의 제목 크기도 조절할 경우 추가 */
+/* .posts-item h2, .posts-item h3 {
+  font-size: 1.5rem;
+} */

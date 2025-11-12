@@ -1,97 +1,52 @@
-# The primary author of this blog.
-# Must be the same as `author` in `_config.yml`.
-# Change `author1` to your shortname.
-author1:
-  name:              <firstname> <lastname>
-  email:             <mail@domain.tld>
+# file: `_data/authors.yml`
 
-  # Used at the bottom of each page and at the top of the `about` layout
-  # Markdown enabled, can use multiple paragraphs (enabled by `|`)
-  about:             |
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    
-    Open `_data/authors.yml` to edit this text.
+# ===============================================
+# 멤버 1: 김강연
+# ===============================================
+kimkangyeon:
+  name: 김강연
+  
+  about: |
+    안녕하세요! 팀의 리더 김강연입니다.
+    주로 Git, 협업 도구 및 알고리즘 분석에 관심이 있습니다.
+    함께 성장하며 재미있게 블로그를 채워가겠습니다!
 
-  # This photo will be used in the about section
-  picture:
-    path:            https://via.placeholder.com/128x128
-    # srcset is optional, but can be used to provide higher res versions for retina displays
-    srcset:
-      1x:            https://via.placeholder.com/128x128
-      2x:            https://via.placeholder.com/256x256
+# ===============================================
+# 멤버 2: 장진욱
+# ===============================================
+jangjinwook:
+  name: 장진욱
 
-  # Social media icons in sidebar
-  # Comment/uncommet to show/hide
-  # Rearrange to change the order in which they appear
-  # You can also provide an absolute URL (starting with https://) instead of usernames
-  social:
-    twitter:         <username>
-    github:          <username>
-    # email:           <mail@domain.tld>
-    # rss:             https://<url>/feed.xml
-    # facebook:        <username>
-    # google:          <number>
-    # vk:              <username>
-    # youtube:         <string_string_string>
-    # vimeo:           <username>
-    # vine:            <username>
-    # spotify:         <user>/<number>
-    # soundcloud:      <username>
-    # lastfm:          <username>
-    # instagram:       <username>
-    # flickr:          <string@string>
-    # 500px:           <username>
-    # dribbble:        <username>
-    # behance:         <username>
-    # deviantart:      <username>
-    # ello:            <username>
-    # twitch:          <username>
-    # steam:           <number>
-    # reddit:          <username>
-    # tumblr:          <username>
-    # pinterest:       <username>
-    # foursquare:      <number>
-    # yelp:            <string>
-    # stackoverflow:   <number/username>
-    # npm:             <username>
-    # hackernews:      <username>
-    # trello:          <firstnamelastname>
-    # linkedin:        <firstname-lastname-string>
-    # xing:            <firstname_lastname_counter>
-    # blogger:         <number>
-    # delicious:       <username>
-    # stumbleupon:     <username>
-    # paypal:          <username>
-    # download:        <url>
-    # keybase:         <username>
-    # signal:          <group-invite-code>
-    # threads:         @<username>
-    # playstation:     https://<url>
-    # messenger:       https://<url>
-    # stripe:          https://<url>
-    # slack:           https://<url>
-    # gitlab:          <username>
-    # line:            <username>
-    # medium:          <path>
-    # xbox:            <gamer-tag>
-    # wechat:          https://<url>
-    # discord:         <invite-code>
-    # mastodon:        https://<url>
-    # x:               <username>
+  about: |
+    소프트웨어 개발자 장진욱입니다.
+    컴퓨터 구조와 운영체제(CS On CS)에 대한 심도 있는 내용을 다룹니다.
 
-# Another author (optional)
-author2:
-  name:              <firtname> <lastname>
-  email:             <mail@domain.tld>
-  about:             |
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+# ===============================================
+# 멤버 3: 정수민
+# ===============================================
+jungsumin:
+  name: 정수민
 
-    Open `_data/authors.yml` to edit this text.
+  about: |
+    알고리즘 문제 풀이를 즐겨하는 정수민입니다.
+    다양한 유형의 알고리즘 풀이 과정과 팁을 공유합니다.
 
-  picture:           https://placehold.it/128x128
-  twitter:           <username>
-  github:            <username>
+# ===============================================
+# 멤버 4: 배재유
+# ===============================================
+baejaeyu:
+  name: 배재유
+
+  about: |
+    자바(Java) 언어와 시스템 프로그래밍에 관심이 많습니다.
+    실무에 유용한 Java 깊숙한 내용과 CSAPP 관련 주제를 주로 포스팅합니다.
+
+# ===============================================
+# 멤버 5: 김민재
+# ===============================================
+kimminjae:
+  name: 김민재
+
+  about: |
+    프론트엔드와 백엔드를 넘나드는 풀스택 개발을 지향합니다.
+    다양한 기술 스택 리뷰와 경험을 나눕니다.

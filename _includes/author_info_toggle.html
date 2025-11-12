@@ -1,0 +1,38 @@
+{% assign author_name_key = include.author | default: page.author %}
+{% assign current_author_name = site.data.authors[author_name_key].name %}
+{% assign author_colors = site.data.author_colors %}
+{% assign author_hex = author_colors[current_author_name] | default: "#333333" %}
+
+<div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+    
+    <details>
+        <summary style="cursor: pointer; font-size: 1.1em; font-weight: bold; color: {{ author_hex }}; margin-bottom: 5px;">
+            <span style="font-size: 1.2em;">👉</span> 
+            {{ current_author_name }}의 게시물 목록 (클릭하여 펼치기)
+        </summary>
+        
+        <div style="padding: 10px 0 0 10px; font-size: 0.95em;">
+            
+            <ul style="list-style: none; padding-left: 0;">
+            {% comment %} site.posts를 순회하며 현재 작성자와 일치하는 포스트만 리스트업 {% endcomment %}
+            {% assign post_count = 0 %}
+            {% for post in site.posts %}
+                {% if post.author == author_name_key %}
+                    {% assign post_count = post_count | plus: 1 %}
+                    <li style="margin-bottom: 5px;">
+                        <span style="color: #666; font-size: 0.9em;">({{ post.date | date: "%Y-%m-%d" }})</span>
+                        <a href="{{ post.url | relative_url }}" style="text-decoration: none; font-weight: bold; color: {{ author_hex }};">
+                            {{ post.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% comment %} 게시물이 없을 경우 메시지 표시 {% endcomment %}
+            {% if post_count == 0 %}
+                <li>아직 등록된 게시물이 없습니다.</li>
+            {% endif %}
+            </ul>
+        </div>
+    </details>
+</div>

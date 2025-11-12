@@ -118,7 +118,8 @@ theme_color:           rgb(25,55,71)
 # The font used for headings. Expects a string that is a valid CSS font-family value.
 # To change font-weight, see _sass/variables.scss
 # font_heading:          Roboto Slab, Helvetica, Arial, sans-serif
-
+font_heading: "'Noto Sans KR', sans-serif"
+font-size_heading: 0.75rem  # 이 값 조정
 # The font used for code blocks. Expects a string that is a valid CSS font-family value. 
 # Defaults to the [System Monospace Font Stack](https://qwtel.com/posts/software/the-monospaced-system-ui-css-font-stack/).
 # font_code:             Fira Code, Menlo, Monaco, Consolas, monospace;
@@ -201,7 +202,7 @@ hydejack:
   # Set to `true` if you don't to use the auto-hiding (JavaScript based) navbar.
   # Note that this will not hide the navbar completely, only replace it with a static one.
   # Use custom css to hide completely, e.g. `#_navbar { display: none }`.
-  no_navbar:           false
+  no_navbar:           true
 
   # Set to true to disable the built-in search functionality.
   # Note that search is disabled during local use to save on build time.
