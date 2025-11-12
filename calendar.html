@@ -185,18 +185,24 @@ permalink: /calendar/
 // 1. 포스트 데이터 로드
 const allPosts = [
 {%- for post in site.posts -%}
-    {
-        date: '{{ post.date | date: "%Y-%m-%d" }}',
-        year: {{ post.date | date: "%Y" }},
-        month: {{ post.date | date: "%m" | plus: 0 }},
-        day: {{ post.date | date: "%d" | plus: 0 }},
-        title: {{ post.title | jsonify }},
-        url: '{{ post.url | relative_url }}',
-        author: '{{ post.author | default: "unknown" }}',
-        authorName: '{%- if post.author -%}{%- assign author_data = site.data.authors[post.author] -%}{%- if author_data -%}{{ author_data.name }}{%- else -%}{{ post.author }}{%- endif -%}{%- else -%}작성자 미상{%- endif -%}',
-        categories: {{ post.categories | jsonify }},
-        tags: {{ post.tags | jsonify }}
-    }{%- unless forloop.last -%},{%- endunless -%}
+  {
+    date: '{{ post.date | date: "%Y-%m-%d" }}',
+    year: {{ post.date | date: "%Y" }},
+    month: {{ post.date | date: "%m" | plus: 0 }},
+    day: {{ post.date | date: "%d" | plus: 0 }},
+    title: {{ post.title | jsonify }},
+    url: '{{ post.url | relative_url }}',
+    author: {{ post.author | default: "unknown" | jsonify }},
+    authorName: {%- if post.author and site.data.authors[post.author] -%}
+      {{ site.data.authors[post.author].name | jsonify }}
+    {%- elsif post.author -%}
+      {{ post.author | jsonify }}
+    {%- else -%}
+      "작성자 미상"
+    {%- endif -%},
+    categories: {{ post.categories | jsonify | default: "[]" }},
+    tags: {{ post.tags | jsonify | default: "[]" }}
+  }{%- unless forloop.last -%},{%- endunless -%}
 {%- endfor -%}
 ];
 
