@@ -1,0 +1,16 @@
+- title: Home
+  url: /
+
+- title: 개인별 게시물
+  url: /docs/
+  submenu:
+    - title: 정수민
+      url: /docs/authors/jungsumin/
+    - title: 김민재
+      url: /docs/authors/kimminjae/
+    - title: 김강연
+      url: /docs/authors/kimkangyeon/
+    - title: 장진욱
+      url: /docs/authors/jangjinwook/
+    - title: 배재유
+      url: /docs/authors/baejaeyu/

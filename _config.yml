@@ -51,10 +51,11 @@ author:
 menu:
   - title:             About Team
     url:               /about/
-  - title:             주간 게시물
-    url:               /docs/
   - title:             개인별 게시물
+    url:               /docs/
+  - title:             월별 게시물
     url:               /example/
+
 
 # Add links to the footer.
 # Typically you'll want to link to your cookie- or privacy policy (if appliable), etc..
@@ -73,10 +74,13 @@ copyright:             © 2024. All rights reserved.
 permalink:             /:categories/:year-:month-:day-:title/
 
 # Pagination configuration (used by the `blog` layout)
-paginate:              10
-paginate_path:         /:num/
+# Pagination 설정
+paginate: 10
+paginate_path: '/example/page:num/'
 
 
+# _config.yml
+data_dir: _data
 # Theme
 # ---------------------------------------------------------------------------------------
 
@@ -202,12 +206,13 @@ hydejack:
   # Set to `true` if you don't to use the auto-hiding (JavaScript based) navbar.
   # Note that this will not hide the navbar completely, only replace it with a static one.
   # Use custom css to hide completely, e.g. `#_navbar { display: none }`.
-  no_navbar:           true
+  no_navbar:           false
 
   # Set to true to disable the built-in search functionality.
   # Note that search is disabled during local use to save on build time.
   # Run Jekyll with the `JEKYLL_ENV` environment variable set to `production` to enable.
   no_search:           false
+
 
   # Set to `true` if you do not want parts of the css inlined in <head/>
   # This will increase site build speed dramatically!
