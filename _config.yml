@@ -53,6 +53,8 @@ menu:
     url:               /about/
   - title:             개인별 게시물
     url:               /docs/
+  - title:             월별 캘린더
+    url:               /calendar/
   - title:             월별 게시물
     url:               /example/
 
