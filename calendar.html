@@ -1,0 +1,268 @@
+---
+layout: page
+title: 월별 게시물 캘린더
+description: 월별로 작성된 게시물을 캘린더 형태로 확인할 수 있습니다.
+permalink: /calendar/
+sitemap: false
+---
+
+<style>
+body {
+    background: #0d1117;
+    color: white;
+}
+
+.calendar-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background: #161b22;
+    border-radius: 6px;
+}
+
+.calendar-header h2 {
+    color: white;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.calendar-nav button {
+    background: #21262d;
+    color: white;
+    border: 1px solid #30363d;
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.calendar-nav button:hover {
+    background: #30363d;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #0d1117;
+}
+
+.calendar-table th {
+    background: #161b22;
+    color: #8b949e;
+    padding: 12px;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #30363d;
+}
+
+.calendar-table td {
+    padding: 10px 12px;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    vertical-align: middle;
+    font-size: 0.8rem;
+}
+
+.calendar-table tr:hover {
+    background: #161b22;
+}
+
+.post-title-cell {
+    color: #58a6ff;
+    font-weight: 500;
+}
+
+.post-title-cell a {
+    color: #58a6ff;
+    text-decoration: none;
+}
+
+.post-title-cell a:hover {
+    text-decoration: underline;
+}
+
+.url-cell {
+    color: #8b949e;
+    font-size: 0.75rem;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.date-cell {
+    color: #8b949e;
+    white-space: nowrap;
+}
+
+.author-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+}
+
+.author-badge[data-author="kimkangyeon"] { background: #007bff; }
+.author-badge[data-author="jangjinwook"] { background: #28a745; }
+.author-badge[data-author="jungsumin"] { background: #6f42c1; }
+.author-badge[data-author="baejaeyu"] { background: #17a2b8; }
+.author-badge[data-author="kimminjae"] { background: #fd7e14; }
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #1f6feb;
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #6e7681;
+    font-style: italic;
+}
+</style>
+
+<div class="calendar-wrapper">
+    <div class="calendar-header">
+        <h2 id="monthTitle"></h2>
+        <div class="calendar-nav">
+            <button onclick="prevMonth()">◀ 이전</button>
+            <button onclick="goToday()">오늘</button>
+            <button onclick="nextMonth()">다음 ▶</button>
+        </div>
+    </div>
+    
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th style="width: 40%;">게시물 이름</th>
+                <th style="width: 25%;">URL 게시</th>
+                <th style="width: 15%;">게시일</th>
+                <th style="width: 10%;">게시자</th>
+                <th style="width: 10%;">상태</th>
+            </tr>
+        </thead>
+        <tbody id="calendarTable">
+        </tbody>
+    </table>
+</div>
+
+<script>
+const posts = [
+    {% for post in site.posts %}
+    {
+        date: "{{ post.date | date: '%Y-%m-%d' }}",
+        title: "{{ post.title | escape }}",
+        url: "{{ post.url | relative_url }}",
+        fullUrl: "{{ site.url }}{{ site.baseurl }}{{ post.url }}",
+        author: "{{ post.author }}",
+        authorName: "{{ site.data.authors[post.author].name }}"
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+];
+
+let currentYear, currentMonth;
+
+function init() {
+    const today = new Date();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+    render();
+}
+
+function render() {
+    const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+    document.getElementById('monthTitle').textContent = `${currentYear}년 ${months[currentMonth]}`;
+    
+    // 해당 월의 포스트 필터링
+    const monthPosts = posts.filter(post => {
+        const [year, month] = post.date.split('-');
+        return parseInt(year) === currentYear && parseInt(month) === currentMonth + 1;
+    });
+    
+    // 날짜순 정렬 (최신순)
+    monthPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    const tbody = document.getElementById('calendarTable');
+    
+    if (monthPosts.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty-state">
+                    이 달에 작성된 게시물이 없습니다.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    let html = '';
+    monthPosts.forEach(post => {
+        const [year, month, day] = post.date.split('-');
+        const dateStr = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
+        
+        html += `
+            <tr>
+                <td class="post-title-cell">
+                    <a href="${post.url}">${post.title}</a>
+                </td>
+                <td class="url-cell" title="${post.fullUrl}">
+                    ${post.fullUrl}
+                </td>
+                <td class="date-cell">${dateStr}</td>
+                <td>
+                    <span class="author-badge" data-author="${post.author}">${post.authorName}</span>
+                </td>
+                <td>
+                    <span class="status-badge">게시됨</span>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+}
+
+function prevMonth() {
+    currentMonth--;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    }
+    render();
+}
+
+function nextMonth() {
+    currentMonth++;
+    if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    render();
+}
+
+function goToday() {
+    const today = new Date();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+    render();
+}
+
+init();
+document.getElementById('_pushState')?.addEventListener('hy-push-state-load', init);
+</script>
