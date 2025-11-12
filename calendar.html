@@ -135,9 +135,23 @@ body {
     color: #6e7681;
     font-style: italic;
 }
+
+.debug-info {
+    background: #161b22;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: #8b949e;
+}
 </style>
 
 <div class="calendar-wrapper">
+    <!-- 디버깅 정보 -->
+    <div class="debug-info" id="debugInfo">
+        포스트 로딩 중...
+    </div>
+
     <div class="calendar-header">
         <h2 id="monthTitle"></h2>
         <div class="calendar-nav">
@@ -150,11 +164,11 @@ body {
     <table class="calendar-table">
         <thead>
             <tr>
-                <th style="width: 40%;">게시물 이름</th>
-                <th style="width: 25%;">URL 게시</th>
+                <th style="width: 35%;">게시물 이름</th>
+                <th style="width: 20%;">카테고리/태그</th>
                 <th style="width: 15%;">게시일</th>
-                <th style="width: 10%;">게시자</th>
-                <th style="width: 10%;">상태</th>
+                <th style="width: 15%;">게시자</th>
+                <th style="width: 15%;">URL</th>
             </tr>
         </thead>
         <tbody id="calendarTable">
@@ -163,18 +177,31 @@ body {
 </div>
 
 <script>
+// Jekyll에서 포스트 데이터 가져오기
 const posts = [
-    {% for post in site.posts %}
+    {% assign all_posts = site.posts | sort: 'date' | reverse %}
+    {% for post in all_posts %}
     {
         date: "{{ post.date | date: '%Y-%m-%d' }}",
-        title: "{{ post.title | escape }}",
+        title: {{ post.title | jsonify }},
         url: "{{ post.url | relative_url }}",
-        fullUrl: "{% if site.url %}{{ site.url }}{% endif %}{% if site.baseurl %}{{ site.baseurl }}{% endif %}{{ post.url }}",
-        author: "{{ post.author | default: 'unknown' }}",
-        authorName: "{% if post.author and site.data.authors[post.author] %}{{ site.data.authors[post.author].name }}{% else %}{{ post.author | default: '작성자 미상' }}{% endif %}"
+        fullUrl: "{{ post.url | absolute_url }}",
+        author: {{ post.author | default: "unknown" | jsonify }},
+        authorName: {% if post.author %}{% assign author_data = site.data.authors[post.author] %}{% if author_data %}{{ author_data.name | jsonify }}{% else %}{{ post.author | jsonify }}{% endif %}{% else %}"작성자 미상"{% endif %},
+        categories: {{ post.categories | join: ", " | jsonify }},
+        tags: {{ post.tags | join: ", " | jsonify }}
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
 ];
+
+// 디버깅 정보 표시
+console.log('총 포스트 수:', posts.length);
+console.log('포스트 데이터:', posts);
+
+document.getElementById('debugInfo').innerHTML = `
+    <strong>📊 통계:</strong> 총 ${posts.length}개의 게시물이 로드되었습니다.
+    ${posts.length === 0 ? '<br><strong style="color: #f85149;">⚠️ 포스트가 없습니다. example/_posts/ 폴더를 확인해주세요.</strong>' : ''}
+`;
 
 let currentYear, currentMonth;
 
@@ -195,6 +222,8 @@ function render() {
         return parseInt(year) === currentYear && parseInt(month) === currentMonth + 1;
     });
     
+    console.log(`${currentYear}년 ${currentMonth + 1}월 포스트:`, monthPosts.length);
+    
     // 날짜순 정렬 (최신순)
     monthPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
     
@@ -204,7 +233,7 @@ function render() {
         tbody.innerHTML = `
             <tr>
                 <td colspan="5" class="empty-state">
-                    이 달에 작성된 게시물이 없습니다.
+                    ${currentYear}년 ${months[currentMonth]}에 작성된 게시물이 없습니다.
                 </td>
             </tr>
         `;
@@ -214,22 +243,30 @@ function render() {
     let html = '';
     monthPosts.forEach(post => {
         const [year, month, day] = post.date.split('-');
-        const dateStr = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
+        const dateStr = `${year}.${month.padStart(2, '0')}.${day.padStart(2, '0')}`;
+        
+        // 카테고리/태그 표시
+        let metaInfo = [];
+        if (post.categories) metaInfo.push(`📁 ${post.categories}`);
+        if (post.tags) metaInfo.push(`🏷️ ${post.tags}`);
+        const metaStr = metaInfo.join(' | ') || '분류 없음';
         
         html += `
             <tr>
                 <td class="post-title-cell">
-                    <a href="${post.url}">${post.title}</a>
+                    <a href="${post.url}">${post.title || '제목 없음'}</a>
                 </td>
-                <td class="url-cell" title="${post.fullUrl}">
-                    ${post.fullUrl}
+                <td style="color: #8b949e; font-size: 0.75rem;">
+                    ${metaStr}
                 </td>
                 <td class="date-cell">${dateStr}</td>
                 <td>
                     <span class="author-badge" data-author="${post.author}">${post.authorName}</span>
                 </td>
-                <td>
-                    <span class="status-badge">게시됨</span>
+                <td class="url-cell">
+                    <a href="${post.url}" style="color: #58a6ff; text-decoration: none;" title="${post.fullUrl}">
+                        🔗 링크
+                    </a>
                 </td>
             </tr>
         `;
@@ -263,6 +300,9 @@ function goToday() {
     render();
 }
 
+// 초기화
 init();
+
+// Hydejack의 페이지 전환 이벤트 처리
 document.getElementById('_pushState')?.addEventListener('hy-push-state-load', init);
 </script>
