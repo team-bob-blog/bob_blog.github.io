@@ -430,17 +430,3 @@ jekyll_compose:
       links:
         - title: Project Link
           url: https://example.com
-
-#------------------------------------
-# 제외할 파일들
-exclude:
-  - "*.py"
-  - "*.csv"
-  - vendor
-  - .bundle
-  - .jekyll-cache
-  - node_modules
-  - example
-
-# 포스트 경로
-permalink: /:categories/:year/:month/:day/:title/
