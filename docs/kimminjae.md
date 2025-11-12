@@ -1,61 +1,339 @@
 ---
 layout: page
-title: "김민재의 전체 게시물"
-author_shortname: kimminjae
+title: 월별 게시물 캘린더
 description: >
-  김민재 님의 모든 작성 글 목록입니다.
+  월별로 작성된 게시물을 확인할 수 있습니다.
 hide_description: true
 sitemap: false
-permalink: /docs/authors/kimminjae/
+permalink: /calendar/
 ---
+
 <style>
-/* (스타일 코드는 공간 절약을 위해 생략하며, 이전에 제공된 모던 UI 스타일을 _includes에 넣어야 합니다.) */
-.author-section { 
-  margin-bottom: 40px; border-radius: 12px; overflow: hidden; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); background: #ffffff;
+.calendar-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
 }
-.author-header { background: #4a90e2; color: white; padding: 15px 25px; }
-.posts-container { padding: 0 20px; }
-.post-item { padding: 15px 0; border-bottom: 1px dashed #eee; cursor: pointer; }
-.post-title-link { font-size: 1.1em; font-weight: 600; color: #2c3e50; text-decoration: none; }
-.post-meta-row { font-size: 0.9em; color: #95a5a6; margin-top: 5px; }
-.post-category { background: #e6f7ff; color: #1890ff; padding: 3px 8px; border-radius: 4px; }
-</style>
-# 📑 김민재 님의 전체 포스트 목록
 
-{% assign target_author = page.author_shortname %}
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px 25px;
+    background: #4a90e2;
+    border-radius: 12px 12px 0 0;
+    color: white;
+}
 
-{% assign posts_by_author = site.posts | where: "author", target_author | sort: 'date' | reverse %}
-{% assign total_posts = posts_by_author.size %}
+.calendar-header h2 {
+    color: white;
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin: 0;
+}
 
-<div class="posts-container">
-{% if total_posts == 0 %}
-  <p style="padding: 20px; color: #95a5a6; font-style: italic;">
-    아직 작성된 게시물이 없습니다.
-  </p>
-{% else %}
-  <ul style="list-style-type: none; padding-left: 0;">
-  {% for post in posts_by_author %}
+.calendar-nav button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    margin: 0 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.calendar-nav button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.posts-container {
+    padding: 0 20px 20px 20px;
+    background: #ffffff;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.post-item {
+    display: flex;
+    flex-direction: column;
+    padding: 15px 0;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.post-item:last-child {
+    border-bottom: none;
+}
+
+.post-item:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+.post-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.post-title-link {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.post-title-link:hover {
+    color: #4a90e2;
+    text-decoration: underline;
+}
+
+.post-category {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e6f7ff;
+    color: #1890ff;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.post-date {
+    color: #95a5a6;
+    white-space: nowrap;
+    font-size: 0.85em;
+}
+
+.post-tags {
+    color: #95a5a6;
+    font-size: 0.85em;
+    margin-left: 10px;
+}
+
+.author-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: 500;
+    color: white;
+    margin-right: 8px;
+}
+
+.author-badge[data-author="kimkangyeon"] { background: #007bff; }
+.author-badge[data-author="jangjinwook"] { background: #28a745; }
+.author-badge[data-author="jungsumin"] { background: #6f42c1; }
+.author-badge[data-author="baejaeyu"] { background: #17a2b8; }
+.author-badge[data-author="kimminjae"] { background: #fd7e14; }
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #95a5a6;
+    font-style: italic;
+}
+
+.debug-info {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #666;
+    border-left: 4px solid #4a90e2;
+}
+
+.meta-left {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .calendar-header {
+        flex-direction: column;
+        gap: 15px;
+    }
     
-    <li class="post-item" onclick="window.location.href='{{ post.url | relative_url }}'">
-      <a href="{{ post.url | relative_url }}" class="post-title-link">
-        {{ post.title }}
-      </a>
-      <div class="post-meta-row">
-        {% for category in post.categories %}
-          {% unless category == "example" %}
-            <span class="post-category">{{ category }}</span>
-          {% endunless %}
-        {% endfor %}
-        <span class="post-tags">#{{ post.tags | join: ' #' }}</span>
-        <span class="post-date" style="margin-left: 15px;">{{ post.date | date: "%Y년 %m월 %d일" }}</span>
-      </div>
-    </li>
-      
-  {% endfor %}
-  </ul>
-  
-  <p style="margin-top: 20px; padding-bottom: 10px;">총 **{{ total_posts }}** 개의 게시물이 있습니다.</p>
+    .post-meta-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
 
-{% endif %}
+<div class="calendar-wrapper">
+    <!-- 디버깅 정보 -->
+    <div class="debug-info" id="debugInfo">
+        📊 포스트 로딩 중...
+    </div>
+
+    <div class="calendar-header">
+        <h2 id="monthTitle">📅 2025년 1월</h2>
+        <div class="calendar-nav">
+            <button onclick="prevMonth()">◀ 이전</button>
+            <button onclick="goToday()">오늘</button>
+            <button onclick="nextMonth()">다음 ▶</button>
+        </div>
+    </div>
+    
+    <div class="posts-container" id="postsContainer">
+        <div class="empty-state">
+            게시물을 불러오는 중입니다...
+        </div>
+    </div>
 </div>
+
+<script>
+// Jekyll에서 포스트 데이터 가져오기
+const posts = [
+    {%- assign all_posts = site.posts | sort: 'date' | reverse -%}
+    {%- for post in all_posts -%}
+    {
+        date: {{ post.date | date: '%Y-%m-%d' | jsonify }},
+        title: {{ post.title | jsonify }},
+        url: {{ post.url | relative_url | jsonify }},
+        author: {{ post.author | default: "unknown" | jsonify }},
+        authorName: {%- if post.author -%}{%- assign author_data = site.data.authors[post.author] -%}{%- if author_data -%}{{ author_data.name | jsonify }}{%- else -%}{{ post.author | jsonify }}{%- endif -%}{%- else -%}"작성자 미상"{%- endif -%},
+        categories: {{ post.categories | jsonify }},
+        tags: {{ post.tags | jsonify }}
+    }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+];
+
+// 디버깅
+console.log('총 포스트 수:', posts.length);
+console.log('포스트 데이터:', posts);
+
+// 디버깅 정보 업데이트
+const debugEl = document.getElementById('debugInfo');
+if (posts.length === 0) {
+    debugEl.innerHTML = `
+        <strong>⚠️ 경고:</strong> 포스트가 없습니다. 
+        <code>example/_posts/</code> 폴더에 마크다운 파일이 있는지 확인해주세요.
+    `;
+    debugEl.style.background = '#fff3cd';
+    debugEl.style.borderLeftColor = '#ffc107';
+} else {
+    debugEl.innerHTML = `
+        <strong>✅ 성공:</strong> 총 ${posts.length}개의 게시물이 로드되었습니다.
+    `;
+}
+
+let currentYear, currentMonth;
+
+function init() {
+    const today = new Date();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+    render();
+}
+
+function render() {
+    const months = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+    document.getElementById('monthTitle').textContent = `📅 ${currentYear}년 ${months[currentMonth]}`;
+    
+    // 해당 월의 포스트 필터링
+    const monthPosts = posts.filter(post => {
+        const [year, month] = post.date.split('-');
+        return parseInt(year) === currentYear && parseInt(month) === currentMonth + 1;
+    });
+    
+    console.log(`${currentYear}년 ${currentMonth + 1}월 포스트:`, monthPosts.length);
+    
+    // 날짜순 정렬 (최신순)
+    monthPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    const container = document.getElementById('postsContainer');
+    
+    if (monthPosts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                ${currentYear}년 ${months[currentMonth]}에 작성된 게시물이 없습니다.
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '<ul style="list-style-type: none; padding-left: 0;">';
+    monthPosts.forEach(post => {
+        const [year, month, day] = post.date.split('-');
+        const dateStr = `${year}년 ${parseInt(month)}월 ${parseInt(day)}일`;
+        
+        // 카테고리 생성 (example 제외)
+        let categoriesHtml = '';
+        if (post.categories && post.categories.length > 0) {
+            post.categories.forEach(cat => {
+                if (cat !== 'example') {
+                    categoriesHtml += `<span class="post-category">${cat}</span>`;
+                }
+            });
+        }
+        
+        // 태그 생성
+        let tagsHtml = '';
+        if (post.tags && post.tags.length > 0) {
+            tagsHtml = `<span class="post-tags">#${post.tags.join(' #')}</span>`;
+        }
+        
+        html += `
+            <li class="post-item" onclick="window.location.href='${post.url}'">
+                <a href="${post.url}" class="post-title-link">
+                    ${post.title || '제목 없음'}
+                </a>
+                <div class="post-meta-row">
+                    <div>
+                        <span class="author-badge" data-author="${post.author}">${post.authorName}</span>
+                        ${categoriesHtml}
+                        ${tagsHtml}
+                    </div>
+                    <div class="post-date">${dateStr}</div>
+                </div>
+            </li>
+        `;
+    });
+    html += '</ul>';
+    
+    container.innerHTML = html;
+}
+
+function prevMonth() {
+    currentMonth--;
+    if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+    }
+    render();
+}
+
+function nextMonth() {
+    currentMonth++;
+    if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+    }
+    render();
+}
+
+function goToday() {
+    const today = new Date();
+    currentYear = today.getFullYear();
+    currentMonth = today.getMonth();
+    render();
+}
+
+// 초기화
+init();
+
+// Hydejack의 페이지 전환 이벤트 처리
+if (document.getElementById('_pushState')) {
+    document.getElementById('_pushState').addEventListener('hy-push-state-load', init);
+}
+</script>
