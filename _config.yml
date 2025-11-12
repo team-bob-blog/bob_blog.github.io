@@ -80,7 +80,6 @@ permalink:             /:categories/:year-:month-:day-:title/
 paginate: 10
 paginate_path: '/example/page:num/'
 
-
 # _config.yml
 data_dir: _data
 # Theme
@@ -431,3 +430,17 @@ jekyll_compose:
       links:
         - title: Project Link
           url: https://example.com
+
+#------------------------------------
+# 제외할 파일들
+exclude:
+  - "*.py"
+  - "*.csv"
+  - vendor
+  - .bundle
+  - .jekyll-cache
+  - node_modules
+  - example
+
+# 포스트 경로
+permalink: /:categories/:year/:month/:day/:title/
