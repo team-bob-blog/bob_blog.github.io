@@ -193,7 +193,7 @@ const allPosts = [
     title: {{ post.title | jsonify }},
     url: '{{ post.url | relative_url }}',
     author: {{ post.author | default: "unknown" | jsonify }},
-    authorName: {% assign author_obj = site.data.authors[post.author] %}{% if author_obj %}{{ author_obj.name | jsonify }}{% elsif post.author %}{{ post.author | jsonify }}{% else %}"작성자 미상"{% endif %},
+    authorName: {{ site.data.authors[post.author].name | default: post.author | default: "작성자 미상" | jsonify }},
     categories: {{ post.categories | jsonify }},
     tags: {{ post.tags | jsonify }}
   }{% unless forloop.last %},{% endunless %}
