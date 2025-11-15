@@ -184,7 +184,7 @@ permalink: /calendar/
 <script>
 // 1. 포스트 데이터 로드
 const allPosts = [
-{%- for post in site.posts -%}
+{% for post in site.posts %}
   {
     date: '{{ post.date | date: "%Y-%m-%d" }}',
     year: {{ post.date | date: "%Y" }},
@@ -193,17 +193,11 @@ const allPosts = [
     title: {{ post.title | jsonify }},
     url: '{{ post.url | relative_url }}',
     author: {{ post.author | default: "unknown" | jsonify }},
-    authorName: {%- if post.author and site.data.authors[post.author] -%}
-      {{ site.data.authors[post.author].name | jsonify }}
-    {%- elsif post.author -%}
-      {{ post.author | jsonify }}
-    {%- else -%}
-      "작성자 미상"
-    {%- endif -%},
-    categories: {{ post.categories | jsonify | default: "[]" }},
-    tags: {{ post.tags | jsonify | default: "[]" }}
-  }{%- unless forloop.last -%},{%- endunless -%}
-{%- endfor -%}
+    authorName: {% assign author_obj = site.data.authors[post.author] %}{% if author_obj %}{{ author_obj.name | jsonify }}{% elsif post.author %}{{ post.author | jsonify }}{% else %}"작성자 미상"{% endif %},
+    categories: {{ post.categories | jsonify }},
+    tags: {{ post.tags | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{% endfor %}
 ];
 
 console.log('📊 총 포스트:', allPosts.length);
