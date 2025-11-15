@@ -236,24 +236,36 @@ permalink: /calendar/
     const escapeMap = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
     const escapeHtml = (value = "") => String(value ?? "").replace(/[&<>"']/g, (char) => escapeMap[char]);
 
+    let initialized = false; // 이미 초기화했는지 체크
+
     function initializeCalendar() {
+        if (initialized) {
+            console.log('[calendar] 이미 초기화됨, 재실행 스킵');
+            return;
+        }
+        console.log('[calendar] initializeCalendar 호출');
+
         const dataEl = document.getElementById('calendarData');
         const debugEl = document.getElementById('calendarDebug');
         const listEl = document.getElementById('calendarList');
         const titleEl = document.getElementById('calendarMonthLabel');
         const rootEl = document.getElementById('calendarApp');
-        if (!rootEl || !listEl || !titleEl) return;
+        if (!rootEl || !listEl || !titleEl) {
+            console.warn('[calendar] 필수 요소가 없습니다.');
+            return;
+        }
 
         let posts = [];
         if (dataEl) {
             const raw = dataEl.textContent.trim();
+            console.log('[calendar] raw JSON length:', raw.length);
             if (raw.length) {
                 try {
                     posts = JSON.parse(raw);
                 } catch (error) {
-                    console.error('Calendar JSON 파싱 실패', error);
+                    console.error('[calendar] JSON 파싱 실패', error);
                     if (debugEl) {
-                        debugEl.innerHTML = `<strong>⚠️ 오류:</strong> 캘린더 데이터를 해석하지 못했습니다. 로컬에서 브라우저 콘솔(F12)을 확인해 주세요.`;
+                        debugEl.innerHTML = `<strong>⚠️ 오류:</strong> 캘린더 데이터를 해석하지 못했습니다. 브라우저 콘솔(F12)을 확인해 주세요.`;
                         debugEl.classList.add('calendar-status--error');
                     }
                     return;
@@ -261,6 +273,7 @@ permalink: /calendar/
             }
         }
 
+        console.log('[calendar] posts count:', posts.length);
         if (debugEl) {
             if (posts.length) {
                 debugEl.innerHTML = `<strong>✅ 정상 동작:</strong> 총 ${posts.length}개의 게시물을 불러왔습니다. 위/아래 버튼으로 월을 바꿔보세요.`;
@@ -273,14 +286,18 @@ permalink: /calendar/
 
         const today = new Date();
         const state = { year: today.getFullYear(), month: today.getMonth() + 1 };
+        console.log('[calendar] 초기 state:', state);
 
         function render() {
             const monthLabel = monthNames[state.month - 1] || `${state.month}월`;
+            console.log('[calendar] render', state.year, state.month);
             titleEl.textContent = `📅 ${state.year}년 ${monthLabel}`;
 
             const selected = posts
                 .filter(post => post.year === state.year && post.month === state.month)
                 .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            console.log('[calendar] 해당 월 포스트 수:', selected.length);
 
             if (!selected.length) {
                 listEl.innerHTML = `<div class="empty-state">${state.year}년 ${monthLabel}에 작성된 게시물이 없습니다.</div>`;
@@ -323,6 +340,7 @@ permalink: /calendar/
         }
 
         function changeMonth(delta) {
+            console.log('[calendar] changeMonth 호출, delta:', delta);
             state.month += delta;
             if (state.month > 12) {
                 state.month = 1;
@@ -331,6 +349,7 @@ permalink: /calendar/
                 state.month = 12;
                 state.year -= 1;
             }
+            console.log('[calendar] 변경된 state:', state);
             render();
         }
 
@@ -338,21 +357,30 @@ permalink: /calendar/
             const now = new Date();
             state.year = now.getFullYear();
             state.month = now.getMonth() + 1;
+            console.log('[calendar] goToday ->', state);
             render();
         }
 
-        rootEl.querySelectorAll('[data-step]').forEach(button => {
+        // 버튼 이벤트 바인딩
+        const stepButtons = rootEl.querySelectorAll('[data-step]');
+        console.log('[calendar] stepButtons 개수:', stepButtons.length);
+        stepButtons.forEach(button => {
             if (button.dataset.bound === 'true') return;
-            button.addEventListener('click', () => changeMonth(Number(button.dataset.step)));
+            button.addEventListener('click', () => {
+                const delta = Number(button.dataset.step);
+                changeMonth(delta);
+            });
             button.dataset.bound = 'true';
         });
 
         const todayButton = rootEl.querySelector('[data-action="today"]');
+        console.log('[calendar] todayButton 존재 여부:', !!todayButton);
         if (todayButton && todayButton.dataset.bound !== 'true') {
             todayButton.addEventListener('click', goToday);
             todayButton.dataset.bound = 'true';
         }
 
+        initialized = true;
         render();
     }
 
@@ -364,7 +392,10 @@ permalink: /calendar/
 
     const pushStateRoot = document.getElementById('_pushState');
     if (pushStateRoot) {
-        pushStateRoot.addEventListener('hy-push-state-load', initializeCalendar);
+        pushStateRoot.addEventListener('hy-push-state-load', () => {
+            console.log('[calendar] hy-push-state-load 이벤트');
+            initializeCalendar();
+        });
     }
 })();
 </script>
