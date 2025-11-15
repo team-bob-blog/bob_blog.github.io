@@ -183,7 +183,7 @@ permalink: /calendar/
 
 <div class="calendar-wrapper" id="calendarApp">
     <div class="calendar-status" id="calendarDebug">
-        📊 포스트 로딩 중...
+        📊 블로그 글 목록을 불러오는 중입니다...
     </div>
 
     <section class="calendar-section">
@@ -253,7 +253,7 @@ permalink: /calendar/
                 } catch (error) {
                     console.error('Calendar JSON 파싱 실패', error);
                     if (debugEl) {
-                        debugEl.innerHTML = `<strong>⚠️ 오류:</strong> 캘린더 데이터를 해석하지 못했습니다.`;
+                        debugEl.innerHTML = `<strong>⚠️ 오류:</strong> 캘린더 데이터를 해석하지 못했습니다. 로컬에서 브라우저 콘솔(F12)을 확인해 주세요.`;
                         debugEl.classList.add('calendar-status--error');
                     }
                     return;
@@ -263,10 +263,10 @@ permalink: /calendar/
 
         if (debugEl) {
             if (posts.length) {
-                debugEl.innerHTML = `<strong>✅ 성공:</strong> 총 ${posts.length}개의 게시물이 로드되었습니다.`;
+                debugEl.innerHTML = `<strong>✅ 정상 동작:</strong> 총 ${posts.length}개의 게시물을 불러왔습니다. 위/아래 버튼으로 월을 바꿔보세요.`;
                 debugEl.classList.remove('calendar-status--warning','calendar-status--error');
             } else {
-                debugEl.innerHTML = `<strong>⚠️ 경고:</strong> 게시물이 없습니다. <code>_posts</code> 폴더를 확인해주세요.`;
+                debugEl.innerHTML = `<strong>⚠️ 게시물 없음:</strong> 현재 불러올 게시물이 없습니다. <code>_posts</code> 폴더에 글이 있는지 확인해 주세요.`;
                 debugEl.classList.add('calendar-status--warning');
             }
         }
