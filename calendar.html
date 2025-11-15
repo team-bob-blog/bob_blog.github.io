@@ -87,9 +87,16 @@ permalink: /calendar/
 </div>
 
 <script>
-// 1. Liquid로 JS 배열 생성 (가능한 단순하게)
+// 1. Liquid로 JS 배열 생성 (example 카테고리만)
 const allPosts = [
 {% for post in site.posts %}
+  {% assign has_example = false %}
+  {% for c in post.categories %}
+    {% if c == "example" %}
+      {% assign has_example = true %}
+    {% endif %}
+  {% endfor %}
+  {% if has_example %}
   {
     year: {{ post.date | date: "%Y" | plus: 0 }},
     month: {{ post.date | date: "%m" | plus: 0 }},
@@ -98,6 +105,7 @@ const allPosts = [
     url: {{ post.url | relative_url | jsonify }},
     categories: {{ post.categories | jsonify }}
   }{% unless forloop.last %},{% endunless %}
+  {% endif %}
 {% endfor %}
 ];
 
@@ -110,7 +118,6 @@ function getPostsForMonth(year, month) {
   return allPosts
     .filter(p => p.year === year && p.month === month)
     .sort((a, b) => {
-      // 최신 글이 위로
       const da = new Date(a.year, a.month - 1, a.day);
       const db = new Date(b.year, b.month - 1, b.day);
       return db - da;
@@ -122,7 +129,6 @@ function renderCalendar() {
   const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
   const titleEl = document.getElementById('monthTitle');
   const container = document.getElementById('postsContainer');
-
   if (!titleEl || !container) return;
 
   titleEl.textContent = currentYear + '년 ' + months[currentMonth - 1];
@@ -132,7 +138,7 @@ function renderCalendar() {
   if (!posts.length) {
     container.innerHTML = '<div class="empty-state">'
       + currentYear + '년 ' + months[currentMonth - 1]
-      + '에 작성된 게시물이 없습니다.</div>';
+      + '에 작성된 example 게시물이 없습니다.</div>';
     return;
   }
 
@@ -142,9 +148,7 @@ function renderCalendar() {
     let cats = '';
     if (Array.isArray(p.categories)) {
       p.categories.forEach(c => {
-        if (c && c.toLowerCase() !== 'example') {
-          cats += '<span class="post-category">' + c + '</span>';
-        }
+        cats += '<span class="post-category">' + c + '</span>';
       });
     }
     html += `
