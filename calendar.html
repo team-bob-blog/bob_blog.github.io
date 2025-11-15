@@ -185,6 +185,14 @@ permalink: /calendar/
 // 1. 포스트 데이터 로드
 const allPosts = [
 {% for post in site.posts %}
+  {% assign author_id = post.author | default: "unknown" %}
+  {% assign author_name = "작성자 미상" %}
+  {% if author_id != "unknown" %}
+    {% assign author_name = author_id %}
+  {% endif %}
+  {% if site.data.authors and site.data.authors[author_id] and site.data.authors[author_id].name %}
+    {% assign author_name = site.data.authors[author_id].name %}
+  {% endif %}
   {
     date: '{{ post.date | date: "%Y-%m-%d" }}',
     year: {{ post.date | date: "%Y" }},
@@ -192,8 +200,8 @@ const allPosts = [
     day: {{ post.date | date: "%d" | plus: 0 }},
     title: {{ post.title | jsonify }},
     url: '{{ post.url | relative_url }}',
-    author: {{ post.author | default: "unknown" | jsonify }},
-    authorName: {{ site.data.authors[post.author].name | default: post.author | default: "작성자 미상" | jsonify }},
+    author: {{ author_id | jsonify }},
+    authorName: {{ author_name | jsonify }},
     categories: {{ post.categories | jsonify }},
     tags: {{ post.tags | jsonify }}
   }{% unless forloop.last %},{% endunless %}
