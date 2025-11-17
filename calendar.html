@@ -1,195 +1,511 @@
 ---
 layout: page
-title: 월별 게시물 캘린더
+title: example 월별 일정
 description: >
-  월별로 작성된 게시물을 확인할 수 있습니다.
+  example/_posts 아래에 있는 글들을 날짜별로 묶어 한눈에 확인할 수 있는 달력입니다.
 hide_description: true
 sitemap: false
 permalink: /calendar/
 ---
 
+{% assign example_posts = site.categories.example %}
+{% if example_posts == empty %}
+  {% assign example_posts = site.posts | where_exp: 'post', 'post.path contains "example/_posts/"' %}
+{% endif %}
+{% assign example_posts = example_posts | sort: 'date' %}
+
 <style>
-.calendar-wrapper {
-  max-width: 900px;
+.calendar-shell {
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 24px 16px 60px;
+  padding: 32px 18px 64px;
+  font-size: 16px;
 }
 .calendar-header {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  gap: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e6e9ef;
+  padding-bottom: 16px;
 }
-.calendar-header h2 {
+.calendar-title {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+}
+.calendar-meta {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: #64748b;
 }
 .calendar-nav {
   display: flex;
   gap: 8px;
 }
 .calendar-nav button {
-  padding: 6px 10px;
+  padding: 8px 14px;
+  border: 1px solid #cbd5f5;
+  border-radius: 6px;
+  background: #fff;
+  color: #1f2a44;
   font-size: 0.9rem;
   cursor: pointer;
 }
-.post-item {
-  padding: 12px 0;
-  border-bottom: 1px solid #eee;
+.calendar-nav button:hover {
+  background: #eef2ff;
 }
-.post-item:last-child {
-  border-bottom: none;
+.calendar-grid {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  margin-bottom: 28px;
 }
-.post-title-link {
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+.calendar-weekdays span {
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.85rem;
+  color: #475569;
   font-weight: 600;
-  color: #2c3e50;
+}
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #fff;
+}
+.calendar-day {
+  min-height: 120px;
+  border-right: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  background: #fff;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.calendar-day:nth-child(7n) {
+  border-right: none;
+}
+.calendar-day.is-outside {
+  background: #fafafa;
+  color: #94a3b8;
+}
+.calendar-day.is-today {
+  box-shadow: inset 0 0 0 2px #93c5fd;
+}
+.calendar-day.has-posts {
+  background: #f9fbff;
+}
+.calendar-day.is-selected {
+  background: #e0edff;
+}
+.calendar-day:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: -2px;
+}
+.day-number {
+  font-weight: 600;
+  color: #0f172a;
+}
+.calendar-day.is-outside .day-number {
+  color: inherit;
+}
+.post-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  min-width: 22px;
+  padding: 2px 6px;
+}
+.day-preview {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: #475569;
+  line-height: 1.25;
+}
+.day-preview li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.day-preview li.more {
+  color: #2563eb;
+  font-weight: 600;
+}
+.calendar-panel {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.03);
+}
+.panel-header {
+  margin-bottom: 12px;
+}
+.panel-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+.panel-date {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 4px 0 0;
+}
+.panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.panel-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.panel-item a {
+  color: #0f172a;
+  font-weight: 600;
   text-decoration: none;
 }
-.post-title-link:hover {
+.panel-item a:hover {
   text-decoration: underline;
 }
-.post-meta-row {
-  margin-top: 4px;
-  display: flex;
-  justify-content: space-between;
+.panel-meta {
+  margin-top: 6px;
   font-size: 0.85rem;
-  color: #777;
+  color: #475569;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
-.post-category {
-  display: inline-block;
-  padding: 2px 6px;
-  margin-right: 4px;
-  border-radius: 4px;
-  background: #eef5ff;
-  font-size: 0.75rem;
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  background: #eff6ff;
+  color: #1d4ed8;
 }
-.empty-state {
-  padding: 32px 0;
+.empty-panel {
+  margin: 16px 0 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+.calendar-empty {
   text-align: center;
-  color: #999;
-  font-style: italic;
+  margin: 48px auto;
+  padding: 36px;
+  border-radius: 14px;
+  border: 1px dashed #cbd5f5;
+  color: #475569;
+  background: #f8fafc;
+}
+@media (max-width: 720px) {
+  .calendar-day {
+    min-height: 90px;
+    padding: 8px;
+  }
+  .calendar-nav {
+    width: 100%;
+    justify-content: center;
+  }
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 </style>
 
-<div class="calendar-wrapper">
+<div class="calendar-shell">
   <div class="calendar-header">
-    <h2 id="monthTitle">월별 게시물</h2>
+    <div>
+      <p class="calendar-label">example 팀 포스팅 일정</p>
+      <h2 id="monthTitle" class="calendar-title">달력 불러오는 중...</h2>
+      <p id="calendarStats" class="calendar-meta"></p>
+    </div>
     <div class="calendar-nav">
-      <button type="button" onclick="changeMonth(-1)">◀ 이전</button>
-      <button type="button" onclick="goToday()">오늘</button>
-      <button type="button" onclick="changeMonth(1)">다음 ▶</button>
+      <button type="button" onclick="changeMonth(-1)" aria-label="이전 달 보기">◀ 이전</button>
+      <button type="button" onclick="goToday()" aria-label="이번 달로 이동">오늘</button>
+      <button type="button" onclick="changeMonth(1)" aria-label="다음 달 보기">다음 ▶</button>
     </div>
   </div>
 
-  <div id="postsContainer">
-    <!-- 자바스크립트로 채움 -->
+  <div class="calendar-grid" id="calendarRegion" {% if example_posts.size == 0 %}hidden{% endif %}>
+    <div class="calendar-weekdays">
+      <span>일</span>
+      <span>월</span>
+      <span>화</span>
+      <span>수</span>
+      <span>목</span>
+      <span>금</span>
+      <span>토</span>
+    </div>
+    <div id="calendarDays" class="calendar-days" role="grid" aria-live="polite"></div>
+  </div>
+
+  <section class="calendar-panel" id="detailPanel" {% if example_posts.size == 0 %}hidden{% endif %}>
+    <div class="panel-header">
+      <div class="panel-label">선택한 날짜</div>
+      <p id="selectedDateLabel" class="panel-date">게시물을 보고 싶은 날짜를 선택하세요.</p>
+    </div>
+    <p id="emptyDayState" class="empty-panel">날짜 셀을 클릭하면 해당 날짜의 게시물을 확인할 수 있습니다.</p>
+    <ul id="dayPostList" class="panel-list"></ul>
+  </section>
+
+  <div id="calendarEmpty" class="calendar-empty" {% if example_posts.size > 0 %}hidden{% endif %}>
+    example/_posts 폴더에 게시물이 없습니다. CSV를 통해 글을 생성한 뒤 다시 확인해 주세요.
   </div>
 </div>
 
-<script>
-// 1. Liquid로 JS 배열 생성 (example 카테고리만)
-const allPosts = [
-{% for post in site.posts %}
-  {% assign has_example = false %}
-  {% for c in post.categories %}
-    {% if c == "example" %}
-      {% assign has_example = true %}
-    {% endif %}
-  {% endfor %}
-  {% if has_example %}
+<script type="application/json" id="example-posts-data">
+[
+{% for post in example_posts %}
   {
-    year: {{ post.date | date: "%Y" | plus: 0 }},
-    month: {{ post.date | date: "%m" | plus: 0 }},
-    day: {{ post.date | date: "%d" | plus: 0 }},
-    title: {{ post.title | jsonify }},
-    url: {{ post.url | relative_url | jsonify }},
-    categories: {{ post.categories | jsonify }}
+    "year": {{ post.date | date: "%Y" | plus: 0 }},
+    "month": {{ post.date | date: "%m" | plus: 0 }},
+    "day": {{ post.date | date: "%d" | plus: 0 }},
+    "date": "{{ post.date | date: "%Y-%m-%d" }}",
+    "title": {{ post.title | strip_newlines | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "author": {{ post.author | default: '' | jsonify }},
+    "tags": {{ post.tags | jsonify }},
+    "categories": {{ post.categories | jsonify }}
   }{% unless forloop.last %},{% endunless %}
-  {% endif %}
 {% endfor %}
-];
+]
+</script>
 
-// 2. 현재 연월 상태
-let currentYear = new Date().getFullYear();
-let currentMonth = new Date().getMonth() + 1;
-
-// 3. 해당 월 포스트 필터링
-function getPostsForMonth(year, month) {
-  return allPosts
-    .filter(p => p.year === year && p.month === month)
-    .sort((a, b) => {
-      const da = new Date(a.year, a.month - 1, a.day);
-      const db = new Date(b.year, b.month - 1, b.day);
-      return db - da;
-    });
+<script>
+const dataElement = document.getElementById('example-posts-data');
+const examplePosts = dataElement ? JSON.parse(dataElement.textContent || '[]') : [];
+if (dataElement) {
+  dataElement.remove();
 }
 
-// 4. 렌더링
+const postsByDate = examplePosts.reduce((acc, post) => {
+  acc[post.date] = acc[post.date] || [];
+  acc[post.date].push(post);
+  return acc;
+}, {});
+
+Object.values(postsByDate).forEach(list => {
+  list.sort((a, b) => a.title.localeCompare(b.title, 'ko'));
+});
+
+const today = new Date();
+let currentYear = today.getFullYear();
+let currentMonth = today.getMonth() + 1;
+let selectedDateKey = null;
+
+const monthTitleEl = document.getElementById('monthTitle');
+const calendarDaysEl = document.getElementById('calendarDays');
+const statsEl = document.getElementById('calendarStats');
+const detailTitleEl = document.getElementById('selectedDateLabel');
+const detailListEl = document.getElementById('dayPostList');
+const emptyStateEl = document.getElementById('emptyDayState');
+
+if (examplePosts.length) {
+  initCalendarState();
+  renderCalendar();
+}
+
+function initCalendarState() {
+  const hasCurrentMonthPosts = examplePosts.some(post => post.year === currentYear && post.month === currentMonth);
+  if (hasCurrentMonthPosts) {
+    return;
+  }
+  const latestPost = [...examplePosts].sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  currentYear = latestPost.year;
+  currentMonth = latestPost.month;
+  selectedDateKey = latestPost.date;
+}
+
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth < 1) {
+    currentMonth = 12;
+    currentYear -= 1;
+  } else if (currentMonth > 12) {
+    currentMonth = 1;
+    currentYear += 1;
+  }
+  selectedDateKey = null;
+  renderCalendar();
+}
+
+function goToday() {
+  currentYear = today.getFullYear();
+  currentMonth = today.getMonth() + 1;
+  const todayKey = formatDateKey(today);
+  selectedDateKey = postsByDate[todayKey] ? todayKey : null;
+  renderCalendar();
+}
+
 function renderCalendar() {
-  const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-  const titleEl = document.getElementById('monthTitle');
-  const container = document.getElementById('postsContainer');
-  if (!titleEl || !container) return;
+  if (!monthTitleEl || !calendarDaysEl) {
+    return;
+  }
+  const monthName = `${currentYear}년 ${String(currentMonth).padStart(2, '0')}월`;
+  monthTitleEl.textContent = monthName;
 
-  titleEl.textContent = currentYear + '년 ' + months[currentMonth - 1];
+  const postsThisMonth = examplePosts.filter(post => post.year === currentYear && post.month === currentMonth);
+  const uniqueDays = new Set(postsThisMonth.map(post => post.day)).size;
+  statsEl.textContent = postsThisMonth.length
+    ? `총 ${postsThisMonth.length}건 · ${uniqueDays}일 작성`
+    : '이 달에는 example 포스팅이 없습니다.';
 
-  const posts = getPostsForMonth(currentYear, currentMonth);
+  calendarDaysEl.innerHTML = '';
+  const firstDay = new Date(currentYear, currentMonth - 1, 1);
+  const startWeekday = firstDay.getDay();
+  const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+  const prevMonthDays = new Date(currentYear, currentMonth - 1, 0).getDate();
+  const totalCells = Math.ceil((startWeekday + daysInMonth) / 7) * 7;
 
-  if (!posts.length) {
-    container.innerHTML = '<div class="empty-state">'
-      + currentYear + '년 ' + months[currentMonth - 1]
-      + '에 작성된 example 게시물이 없습니다.</div>';
+  for (let cell = 0; cell < totalCells; cell++) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'calendar-day';
+    let dayNumber;
+    let displayDate;
+    let inCurrentMonth = false;
+
+    if (cell < startWeekday) {
+      dayNumber = prevMonthDays - startWeekday + cell + 1;
+      displayDate = new Date(currentYear, currentMonth - 2, dayNumber);
+      button.classList.add('is-outside');
+    } else if (cell >= startWeekday + daysInMonth) {
+      dayNumber = cell - (startWeekday + daysInMonth) + 1;
+      displayDate = new Date(currentYear, currentMonth, dayNumber);
+      button.classList.add('is-outside');
+    } else {
+      dayNumber = cell - startWeekday + 1;
+      displayDate = new Date(currentYear, currentMonth - 1, dayNumber);
+      inCurrentMonth = true;
+    }
+
+    const dateKey = formatDateKey(displayDate);
+    const postsForDay = postsByDate[dateKey] || [];
+
+    if (postsForDay.length) {
+      button.classList.add('has-posts');
+    }
+    if (dateKey === selectedDateKey) {
+      button.classList.add('is-selected');
+    }
+    if (isSameDate(displayDate, today)) {
+      button.classList.add('is-today');
+    }
+
+    button.innerHTML = `
+      <span class="day-number">${dayNumber}</span>
+      ${postsForDay.length ? `<span class="post-count">${postsForDay.length}</span>` : ''}
+      <ul class="day-preview">
+        ${postsForDay.slice(0, 3).map(post => `<li>${escapeHtml(post.title)}</li>`).join('')}
+        ${postsForDay.length > 3 ? `<li class="more">+${postsForDay.length - 3} more</li>` : ''}
+      </ul>
+    `;
+
+    button.dataset.date = dateKey;
+    button.addEventListener('click', () => {
+      handleDaySelection(dateKey, inCurrentMonth);
+    });
+
+    calendarDaysEl.appendChild(button);
+  }
+
+  renderDayDetails(selectedDateKey);
+}
+
+function handleDaySelection(dateKey, inCurrentMonth) {
+  const dateObj = parseDateKey(dateKey);
+  if (!inCurrentMonth) {
+    currentYear = dateObj.getFullYear();
+    currentMonth = dateObj.getMonth() + 1;
+  }
+  selectedDateKey = dateKey;
+  renderCalendar();
+}
+
+function renderDayDetails(dateKey) {
+  if (!detailTitleEl || !detailListEl || !emptyStateEl) {
+    return;
+  }
+  if (!dateKey || !postsByDate[dateKey]) {
+    detailTitleEl.textContent = '게시물을 보고 싶은 날짜를 선택하세요.';
+    detailListEl.innerHTML = '';
+    emptyStateEl.style.display = 'block';
     return;
   }
 
-  let html = '';
-  posts.forEach(p => {
-    const dateStr = p.year + '년 ' + p.month + '월 ' + p.day + '일';
-    let cats = '';
-    if (Array.isArray(p.categories)) {
-      p.categories.forEach(c => {
-        cats += '<span class="post-category">' + c + '</span>';
-      });
-    }
-    html += `
-      <div class="post-item">
-        <a class="post-title-link" href="${p.url}">${p.title}</a>
-        <div class="post-meta-row">
-          <div>${cats}</div>
-          <div>${dateStr}</div>
+  const posts = postsByDate[dateKey];
+  const dateObj = parseDateKey(dateKey);
+  detailTitleEl.textContent = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일 (${weekdays[dateObj.getDay()]})`;
+  emptyStateEl.style.display = 'none';
+
+  detailListEl.innerHTML = posts.map(post => {
+    const categories = (post.categories || []).filter(name => name !== 'example');
+    const tags = post.tags || [];
+    return `
+      <li class="panel-item">
+        <a class="panel-link" href="${post.url}">${escapeHtml(post.title)}</a>
+        <div class="panel-meta">
+          ${categories.length ? `<span class="meta-chip">${categories.join(', ')}</span>` : ''}
+          ${tags.length ? `<span class="meta-chip">${tags.join(', ')}</span>` : ''}
         </div>
-      </div>
+      </li>
     `;
-  });
-
-  container.innerHTML = html;
+  }).join('');
 }
 
-// 5. 월 변경
-function changeMonth(delta) {
-  currentMonth += delta;
-  if (currentMonth > 12) {
-    currentMonth = 1;
-    currentYear += 1;
-  } else if (currentMonth < 1) {
-    currentMonth = 12;
-    currentYear -= 1;
-  }
-  renderCalendar();
+const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+
+function formatDateKey(dateObj) {
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+  const d = String(dateObj.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
-// 6. 오늘로 이동
-function goToday() {
-  const today = new Date();
-  currentYear = today.getFullYear();
-  currentMonth = today.getMonth() + 1;
-  renderCalendar();
+function parseDateKey(key) {
+  const [y, m, d] = key.split('-').map(Number);
+  return new Date(y, m - 1, d);
 }
 
-// 7. 초기 렌더
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', renderCalendar);
-} else {
-  renderCalendar();
+function isSameDate(a, b) {
+  return a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+}
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 </script>
