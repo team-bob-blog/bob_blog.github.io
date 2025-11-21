@@ -15,12 +15,12 @@ permalink: /calendar/
 {% assign example_posts = example_posts | sort: 'date' %}
 
 <style>
-/* 캘린더 컨테이너 */
+/* 캘린더 컨테이너 - 다크 모드 방지 및 강제 스타일링 */
 .calendar-wrapper {
   max-width: 1000px;
   margin: 0 auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #333 !important; /* 글자색 강제 고정 */
+  color: #333 !important;
 }
 
 /* 상단 헤더 */
@@ -48,11 +48,6 @@ permalink: /calendar/
   margin: 5px 0 0 0 !important;
   font-size: 0.9rem;
   color: #666 !important;
-}
-
-.calendar-nav {
-  display: flex;
-  gap: 8px;
 }
 
 .calendar-nav button {
@@ -311,27 +306,35 @@ permalink: /calendar/
 [
 {% for post in example_posts %}
   {
-    "date": "{{ post.date | date: "%Y-%m-%d" }}",
+    "date": "{{ post.date | date: '%Y-%m-%d' }}",
     "title": {{ post.title | jsonify }},
     "url": {{ post.url | relative_url | jsonify }},
-    "category": "{{ post.categories | first | default: 'Etc' }}",
-    "author": "{{ post.author }}"
+    "category": {{ post.categories | first | default: 'Etc' | jsonify }},
+    "author": {{ post.author | jsonify }}
   }{% unless forloop.last %},{% endunless %}
 {% endfor %}
 ]
 </script>
 
 <script>
-// 1. 모든 로직을 함수로 감싸서 안전하게 실행
+// 디버깅: 로드 시작 확인
+console.log("Calendar Script Loaded");
+
 function initCalendarApp() {
   const dataScript = document.getElementById('cal-posts-data');
-  if (!dataScript) return; // 데이터가 없으면 중단
+  if (!dataScript) {
+    console.error("데이터 스크립트를 찾을 수 없습니다.");
+    return; 
+  }
 
   let posts = [];
   try {
+    // JSON 파싱 시 오류가 발생하지 않도록 jsonify 필터를 적용했습니다.
     posts = JSON.parse(dataScript.textContent);
+    console.log("Loaded Posts:", posts.length);
   } catch (e) {
     console.error("JSON 파싱 오류:", e);
+    document.getElementById('monthDisplay').innerText = "데이터 오류";
     return;
   }
 
@@ -350,10 +353,14 @@ function initCalendarApp() {
   const scheduleList = document.getElementById('scheduleList');
   const dateTitle = document.getElementById('selectedDateTitle');
 
-  // 버튼 이벤트 연결 (기존 이벤트 제거 후 재연결 방지 위해 onclick 사용)
-  document.getElementById('btnPrev').onclick = () => changeMonth(-1);
-  document.getElementById('btnNext').onclick = () => changeMonth(1);
-  document.getElementById('btnToday').onclick = () => {
+  // 버튼 이벤트 연결
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const btnToday = document.getElementById('btnToday');
+
+  if(btnPrev) btnPrev.onclick = () => changeMonth(-1);
+  if(btnNext) btnNext.onclick = () => changeMonth(1);
+  if(btnToday) btnToday.onclick = () => {
     currDate = new Date();
     render();
     // 오늘 날짜 자동 선택
@@ -371,7 +378,6 @@ function initCalendarApp() {
 
     monthDisplay.innerText = `${year}년 ${month + 1}월`;
     
-    // 이번 달 게시물 수 계산
     let monthlyCount = 0;
     Object.keys(postsMap).forEach(date => {
       if (date.startsWith(`${year}-${String(month + 1).padStart(2, '0')}`)) {
@@ -400,7 +406,6 @@ function initCalendarApp() {
       cell.className = `day-cell ${isToday}`;
       cell.setAttribute('data-date', dateKey);
       
-      // 점 표시 로직 (최대 5개까지만 점으로 표시)
       let dotsHtml = '';
       if (dayPosts.length > 0) {
         dotsHtml = `<div class="dots-container">`;
@@ -421,7 +426,6 @@ function initCalendarApp() {
   }
 
   function selectDate(date, element) {
-    // 선택 스타일 초기화 및 적용
     const cells = grid.querySelectorAll('.day-cell');
     cells.forEach(el => el.classList.remove('selected'));
     if (element) element.classList.add('selected');
@@ -440,7 +444,7 @@ function initCalendarApp() {
           <a href="${post.url}" class="schedule-item">
             <span class="category-tag">${post.category}</span>
             <span class="post-title">${post.title}</span>
-            <span class="post-author">By ${post.author}</span>
+            <span class="post-author">${post.author}</span>
           </a>
         `;
       });
@@ -453,19 +457,17 @@ function initCalendarApp() {
     render();
   }
 
-  // 최초 실행
   render();
 }
 
-// 2. 실행 트리거 설정 (Hydejack 테마 호환성 핵심)
-// 즉시 실행 (새로고침 시)
+// 실행 트리거 (Hydejack 호환)
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCalendarApp);
 } else {
   initCalendarApp();
 }
 
-// Hydejack 페이지 전환(Push State) 시 재실행
+// Push State 리스너
 const pushStateEl = document.getElementById('_pushState');
 if (pushStateEl) {
   pushStateEl.addEventListener('hy-push-state-load', initCalendarApp);
