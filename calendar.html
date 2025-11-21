@@ -15,7 +15,7 @@ permalink: /calendar/
 {% assign example_posts = example_posts | sort: 'date' %}
 
 <style>
-/* 캘린더 스타일 정의 */
+/* 캘린더 전체 래퍼 */
 .calendar-wrapper {
   max-width: 1000px;
   margin: 0 auto;
@@ -153,7 +153,7 @@ permalink: /calendar/
   margin-bottom: 6px;
 }
 
-/* 일정 점 (Dots) */
+/* 달력 내부 점(Dot) 스타일 */
 .dots-container {
   display: flex;
   flex-wrap: wrap;
@@ -165,7 +165,7 @@ permalink: /calendar/
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #dee2e6;
+  /* 배경색은 JS에서 작성자별로 주입됨 */
 }
 
 .more-badge {
@@ -175,7 +175,7 @@ permalink: /calendar/
   margin-left: 2px;
 }
 
-/* 하단 상세 패널 */
+/* 하단 스케줄 리스트 */
 .schedule-panel {
   margin-top: 24px;
   background: #ffffff !important;
@@ -204,6 +204,7 @@ permalink: /calendar/
   gap: 10px;
 }
 
+/* 리스트 아이템 (카드) */
 .schedule-item {
   display: flex;
   align-items: center;
@@ -221,7 +222,7 @@ permalink: /calendar/
   border-color: #ced4da;
 }
 
-/* 작성자 뱃지 */
+/* 작성자 뱃지 (왼쪽) */
 .author-badge {
   padding: 4px 12px;
   border-radius: 20px;
@@ -234,13 +235,16 @@ permalink: /calendar/
   letter-spacing: -0.5px;
 }
 
-/* 제목 스타일 (요청대로 작게) */
+/* 제목 (글씨 작게) */
 .post-title {
-  font-size: 0.85rem; /* 크기 축소 */
+  font-size: 0.85rem; /* 요청하신 대로 작게 */
   font-weight: 500;
   color: #495057 !important;
   flex-grow: 1;
   line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .empty-message {
@@ -307,15 +311,15 @@ permalink: /calendar/
 </script>
 
 <script>
-(function() { // 1. 즉시 실행 함수(IIFE)로 감싸 전역 변수 충돌 방지
+(function() { // IIFE: 전역 변수 충돌 방지
   
-  // 작성자별 색상 설정
+  // 🎨 작성자별 색상 설정 (요청사항 반영)
   const authorColors = {
-    'jungsumin':   { name: '정수민', bg: '#e7f5ff', text: '#1971c2', dot: '#339af0' },
-    'kimkangyeon': { name: '김강연', bg: '#fff5f5', text: '#e03131', dot: '#ff6b6b' },
-    'jangjinwook': { name: '장진욱', bg: '#ebfbee', text: '#2f9e44', dot: '#51cf66' },
-    'baejaeyu':    { name: '배재유', bg: '#f4eeee', text: '#7950f2', dot: '#8d6e63' },
-    'kimminjae':   { name: '김민재', bg: '#f3d9fa', text: '#862e9c', dot: '#cc5de8' },
+    'jungsumin':   { name: '정수민', bg: '#e7f5ff', text: '#1864ab', dot: '#339af0' }, // 파랑
+    'kimkangyeon': { name: '김강연', bg: '#fff5f5', text: '#e03131', dot: '#ff6b6b' }, // 빨강
+    'jangjinwook': { name: '장진욱', bg: '#ebfbee', text: '#2f9e44', dot: '#51cf66' }, // 초록
+    'baejaeyu':    { name: '배재유', bg: '#f3e9e4', text: '#5d4037', dot: '#8d6e63' }, // 갈색 (수정됨)
+    'kimminjae':   { name: '김민재', bg: '#f3d9fa', text: '#862e9c', dot: '#cc5de8' }, // 보라
     'default':     { name: '익명',   bg: '#f8f9fa', text: '#495057', dot: '#adb5bd' }
   };
 
@@ -331,7 +335,7 @@ permalink: /calendar/
     try {
       posts = JSON.parse(dataScript.textContent);
     } catch (e) {
-      console.error("JSON 파싱 오류:", e);
+      console.error("JSON 오류:", e);
       return;
     }
 
@@ -348,7 +352,6 @@ permalink: /calendar/
     const scheduleList = document.getElementById('scheduleList');
     const dateTitle = document.getElementById('selectedDateTitle');
 
-    // 이벤트 핸들러 안전하게 연결
     const btnPrev = document.getElementById('btnPrev');
     const btnNext = document.getElementById('btnNext');
     const btnToday = document.getElementById('btnToday');
@@ -460,7 +463,6 @@ permalink: /calendar/
     render();
   }
 
-  // 2. 실행 로직 (Hydejack 호환성 보장)
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCalendarApp);
   } else {
@@ -472,5 +474,5 @@ permalink: /calendar/
     pushStateEl.addEventListener('hy-push-state-load', initCalendarApp);
   }
 
-})(); // IIFE 종료
+})();
 </script>
