@@ -21,15 +21,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      # [추가됨] 1. 파이썬 3.11 환경 설정
+      # 파이썬 설정 및 스크립트 실행 (이게 없으면 달력 데이터가 0개임)
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # [추가됨] 2. 필수 라이브러리 설치 및 데이터 생성 스크립트 실행
-      # 이 단계가 없으면 달력 데이터가 생성되지 않습니다!
-      - name: Install dependencies and Generate Content
+      - name: Generate Posts from CSV
         run: |
           pip install pandas
           python generate_posts.py

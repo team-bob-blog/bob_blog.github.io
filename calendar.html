@@ -12,291 +12,220 @@ permalink: /calendar/
 {% if example_posts == empty %}
   {% assign example_posts = site.posts | where_exp: 'post', 'post.path contains "example/_posts/"' %}
 {% endif %}
-{% assign example_posts = example_posts | sort: 'date' %}
 
 <style>
-/* 캘린더 컨테이너 */
+/* 컨테이너 리셋 */
 .calendar-wrapper {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #333 !important;
+  background-color: #fff !important;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-/* 상단 헤더 */
+/* 헤더 */
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding: 20px;
-  background: #ffffff !important;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  border: 1px solid #f0f0f0;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 15px;
 }
 
-.month-info h2 {
-  font-size: 1.8rem !important;
+.calendar-header h2 {
+  font-size: 2rem !important;
   font-weight: 800 !important;
+  color: #111 !important;
   margin: 0 !important;
-  color: #1a1a1a !important;
-  line-height: 1.2;
 }
 
-.month-info p {
-  margin: 5px 0 0 0 !important;
-  font-size: 0.9rem;
-  color: #666 !important;
+.nav-btn-group button {
+  background: #fff !important;
+  border: 1px solid #ddd !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555 !important;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.calendar-nav {
-  display: flex;
+.nav-btn-group button:hover {
+  background: #f1f3f5 !important;
+  border-color: #ccc !important;
+}
+
+/* 요일 바 */
+.weekdays-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  color: #868e96;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+/* 날짜 그리드 */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   gap: 8px;
 }
 
-.calendar-nav button {
-  background: #f8f9fa !important;
-  border: 1px solid #e9ecef !important;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #495057 !important;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
-}
-
-.calendar-nav button:hover {
-  background: #e9ecef !important;
-  color: #212529 !important;
-}
-
-/* 달력 그리드 */
-.calendar-container {
-  background: #ffffff !important;
-  border-radius: 16px;
-  border: 1px solid #f0f0f0;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-
-.weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  background: #f8f9fa !important;
-  border-bottom: 1px solid #eee;
-}
-
-.weekdays div {
-  padding: 15px 0;
-  text-align: center;
-  font-weight: 700;
-  color: #868e96 !important;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-}
-
-.days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-}
-
-/* 날짜 셀 디자인 */
 .day-cell {
-  min-height: 100px;
-  border-right: 1px solid #f1f3f5;
-  border-bottom: 1px solid #f1f3f5;
+  min-height: 110px;
+  background: #fff !important;
+  border: 1px solid #eee;
+  border-radius: 8px;
   padding: 8px;
-  position: relative;
   cursor: pointer;
-  transition: all 0.2s;
-  background-color: #fff !important;
-}
-
-.day-cell:nth-child(7n) { border-right: none; }
-.day-cell:hover { background-color: #f8f9fa !important; }
-
-.day-cell.selected {
-  background-color: #e7f5ff !important;
-  box-shadow: inset 0 0 0 2px #339af0;
-  z-index: 1;
-}
-
-.day-cell.today {
-  background-color: #fff9db !important;
-}
-
-.day-cell.today .day-number {
-  background: #fcc419;
-  color: white !important;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  transition: all 0.2s ease;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.day-cell:hover {
+  border-color: #339af0;
+  box-shadow: 0 4px 12px rgba(51, 154, 240, 0.15);
 }
 
 .day-cell.other-month {
-  background-color: #fcfcfc !important;
-}
-.day-cell.other-month .day-number {
-  color: #dee2e6 !important;
+  background: #f8f9fa !important;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
-.day-number {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: #343a40 !important;
-  display: inline-block;
+.day-cell.today {
+  background: #e7f5ff !important;
+  border-color: #339af0;
+}
+
+.day-cell.selected {
+  border: 2px solid #1971c2;
+  background: #e3fafc !important;
+}
+
+.day-num {
+  font-weight: 700;
+  font-size: 1rem;
   margin-bottom: 6px;
+  color: #495057;
 }
 
-/* 일정 점 (Dots) */
-.dots-container {
+/* 점(Dot) 컨테이너 */
+.dot-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
-  padding: 0 2px;
+  gap: 4px;
 }
 
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  /* 배경색은 JS에서 주입 */
+  display: inline-block;
 }
 
-.more-badge {
-  font-size: 0.6rem;
-  color: #868e96 !important;
-  font-weight: bold;
-  margin-left: 2px;
-}
-
-/* 하단 상세 패널 */
-.schedule-panel {
-  margin-top: 24px;
-  background: #ffffff !important;
-  border-radius: 16px;
-  border: 1px solid #f0f0f0;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  min-height: 150px;
-}
-
-.schedule-header {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #333 !important;
-  margin-bottom: 15px !important;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #eee;
-}
-
+/* 하단 상세 리스트 */
 .schedule-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-top: 30px;
+  border-top: 2px solid #eee;
+  padding-top: 20px;
 }
 
-.schedule-item {
+.list-title {
+  font-size: 1.2rem !important;
+  font-weight: 700;
+  margin-bottom: 15px !important;
+  color: #333 !important;
+}
+
+.post-card {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
   background: #fff !important;
+  border: 1px solid #eee;
+  padding: 15px;
   border-radius: 10px;
-  border: 1px solid #e9ecef;
-  transition: transform 0.1s, box-shadow 0.1s;
+  margin-bottom: 10px;
+  transition: 0.2s;
   text-decoration: none !important;
 }
 
-.schedule-item:hover {
-  transform: translateY(-1px);
+.post-card:hover {
+  transform: translateX(5px);
+  border-color: #339af0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border-color: #ced4da;
 }
 
-/* 작성자 뱃지 (왼쪽) */
 .author-badge {
-  padding: 4px 12px;
+  padding: 5px 12px;
   border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.8rem;
+  font-weight: 800;
   margin-right: 15px;
-  white-space: nowrap;
-  min-width: 60px;
+  min-width: 70px;
   text-align: center;
-  letter-spacing: -0.5px;
+  color: #fff !important; /* 뱃지 글씨 흰색 */
 }
 
-/* 제목 스타일 (요청하신 대로 작게) */
 .post-title {
-  font-size: 0.85rem; /* 크기 축소 */
-  font-weight: 500; /* 굵기 뺌 */
-  color: #495057 !important;
-  flex-grow: 1;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333 !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.empty-message {
-  text-align: center;
-  color: #adb5bd !important;
-  padding: 30px;
-  font-style: italic;
-}
-
+/* 모바일 대응 */
 @media (max-width: 768px) {
-  .day-cell { min-height: 70px; padding: 5px; }
+  .day-cell { min-height: 70px; }
   .dot { width: 6px; height: 6px; }
-  .schedule-item { padding: 10px; }
-  .author-badge { font-size: 0.7rem; padding: 3px 8px; margin-right: 10px; }
-  .post-title { font-size: 0.8rem; }
 }
 </style>
 
 <div class="calendar-wrapper">
   <div class="calendar-header">
-    <div class="month-info">
-      <h2 id="monthDisplay">로드 중...</h2>
-      <p id="postCountInfo">데이터를 불러오고 있습니다.</p>
-    </div>
-    <div class="calendar-nav">
-      <button type="button" id="btnPrev">◀</button>
-      <button type="button" id="btnToday">오늘</button>
-      <button type="button" id="btnNext">▶</button>
+    <h2 id="yearMonth">Loading...</h2>
+    <div class="nav-btn-group">
+      <button id="prevBtn">◀</button>
+      <button id="todayBtn">오늘</button>
+      <button id="nextBtn">▶</button>
     </div>
   </div>
 
-  <div class="calendar-container">
-    <div class="weekdays">
-      <div style="color:#ff6b6b !important">SUN</div>
-      <div>MON</div>
-      <div>TUE</div>
-      <div>WED</div>
-      <div>THU</div>
-      <div>FRI</div>
-      <div style="color:#4dabf7 !important">SAT</div>
-    </div>
-    <div id="calendarGrid" class="days"></div>
+  <div class="weekdays-grid">
+    <div style="color: #fa5252">SUN</div>
+    <div>MON</div>
+    <div>TUE</div>
+    <div>WED</div>
+    <div>THU</div>
+    <div>FRI</div>
+    <div style="color: #4c6ef5">SAT</div>
   </div>
 
-  <div class="schedule-panel">
-    <div id="selectedDateTitle" class="schedule-header">날짜를 선택해주세요</div>
-    <div id="scheduleList" class="schedule-list">
-      <div class="empty-message">위 달력에서 날짜를 클릭하면 상세 내용이 여기에 표시됩니다.</div>
-    </div>
+  <div id="calendarGrid" class="days-grid"></div>
+
+  <div class="schedule-list">
+    <h3 id="detailDate" class="list-title">날짜를 선택하세요</h3>
+    <div id="detailContainer"></div>
+  </div>
+  
+  <div id="debugMsg" style="color: red; font-size: 0.8rem; margin-top: 20px; display: none;">
+    데이터 로드 실패. GitHub Actions가 실행되었는지 확인하세요.
   </div>
 </div>
 
-<script type="application/json" id="cal-posts-data">
+<script type="application/json" id="calendarData">
 [
 {% for post in example_posts %}
   {
@@ -310,171 +239,137 @@ permalink: /calendar/
 </script>
 
 <script>
-(function() { // 전역 변수 오염 방지
-  
-  // 🎨 작성자별 색상 설정 (요청사항 반영)
-  const authorColors = {
-    'jungsumin':   { name: '정수민', bg: '#e7f5ff', text: '#1971c2', dot: '#339af0' }, // 파랑
-    'kimkangyeon': { name: '김강연', bg: '#fff5f5', text: '#e03131', dot: '#ff6b6b' }, // 빨강 (연하게)
-    'jangjinwook': { name: '장진욱', bg: '#ebfbee', text: '#2f9e44', dot: '#51cf66' }, // 초록 (연하게)
-    'baejaeyu':    { name: '배재유', bg: '#f4eeee', text: '#5d4037', dot: '#8d6e63' }, // 갈색 (가독성 고려)
-    'kimminjae':   { name: '김민재', bg: '#f3d9fa', text: '#862e9c', dot: '#cc5de8' }, // 보라
-    'default':     { name: '익명',   bg: '#f8f9fa', text: '#495057', dot: '#adb5bd' }  // 기본
+(function() { // 스코프 보호
+  // 작성자별 색상 정의 (요청하신 사항)
+  const authors = {
+    'jungsumin':   { name: '정수민', color: '#1c7ed6' }, // 파랑
+    'kimkangyeon': { name: '김강연', color: '#e03131' }, // 빨강
+    'jangjinwook': { name: '장진욱', color: '#2f9e44' }, // 초록
+    'baejaeyu':    { name: '배재유', color: '#8d6e63' }, // 갈색
+    'kimminjae':   { name: '김민재', color: '#9c36b5' }, // 보라
+    'default':     { name: '멤버',   color: '#868e96' }  // 회색
   };
 
-  function getAuthorStyle(authorId) {
-    return authorColors[authorId] || authorColors['default'];
+  function getAuthor(id) {
+    return authors[id] || authors['default'];
   }
 
-  function initCalendarApp() {
-    const dataScript = document.getElementById('cal-posts-data');
-    if (!dataScript) return;
+  function init() {
+    const scriptTag = document.getElementById('calendarData');
+    if (!scriptTag) return;
 
-    let posts = [];
+    let rawData = [];
     try {
-      posts = JSON.parse(dataScript.textContent);
+      rawData = JSON.parse(scriptTag.textContent);
     } catch (e) {
-      console.error("JSON 파싱 오류:", e);
+      console.error(e);
+      document.getElementById('debugMsg').style.display = 'block';
       return;
     }
 
-    const postsMap = {};
-    posts.forEach(p => {
-      if (!postsMap[p.date]) postsMap[p.date] = [];
-      postsMap[p.date].push(p);
+    // 데이터가 0개면 알림
+    if (rawData.length === 0) {
+      document.getElementById('debugMsg').innerHTML = "데이터가 0건입니다. GitHub Actions에서 generate_posts.py가 실행되지 않았을 수 있습니다.";
+      document.getElementById('debugMsg').style.display = 'block';
+    }
+
+    // 날짜별 데이터 매핑
+    const dataMap = {};
+    rawData.forEach(item => {
+      if (!dataMap[item.date]) dataMap[item.date] = [];
+      dataMap[item.date].push(item);
     });
 
-    let currDate = new Date();
-    const monthDisplay = document.getElementById('monthDisplay');
-    const postCountInfo = document.getElementById('postCountInfo');
-    const grid = document.getElementById('calendarGrid');
-    const scheduleList = document.getElementById('scheduleList');
-    const dateTitle = document.getElementById('selectedDateTitle');
-
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const btnToday = document.getElementById('btnToday');
-
-    if (btnPrev) btnPrev.onclick = () => changeMonth(-1);
-    if (btnNext) btnNext.onclick = () => changeMonth(1);
-    if (btnToday) btnToday.onclick = () => {
-      currDate = new Date();
-      render();
-      setTimeout(() => {
-        const todayStr = currDate.toISOString().split('T')[0];
-        const todayEl = document.querySelector(`.day-cell[data-date="${todayStr}"]`);
-        if(todayEl) selectDate(todayStr, todayEl);
-      }, 50);
-    };
-
-    function render() {
-      const year = currDate.getFullYear();
-      const month = currDate.getMonth();
-      const todayStr = new Date().toISOString().split('T')[0];
-
-      if (monthDisplay) monthDisplay.innerText = `${year}년 ${month + 1}월`;
+    let current = new Date();
+    
+    // 렌더링 함수
+    const render = () => {
+      const year = current.getFullYear();
+      const month = current.getMonth();
       
-      let monthlyCount = 0;
-      Object.keys(postsMap).forEach(date => {
-        if (date.startsWith(`${year}-${String(month + 1).padStart(2, '0')}`)) {
-          monthlyCount += postsMap[date].length;
-        }
-      });
-      if (postCountInfo) postCountInfo.innerText = `총 ${monthlyCount}개의 포스팅`;
-
-      if (!grid) return;
-      grid.innerHTML = "";
+      document.getElementById('yearMonth').innerText = `${year}년 ${month + 1}월`;
 
       const firstDay = new Date(year, month, 1).getDay();
       const lastDate = new Date(year, month + 1, 0).getDate();
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '';
 
+      // 빈 칸
       for (let i = 0; i < firstDay; i++) {
         grid.innerHTML += `<div class="day-cell other-month"></div>`;
       }
 
-      for (let i = 1; i <= lastDate; i++) {
-        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        const dayPosts = postsMap[dateKey] || [];
-        const isToday = dateKey === todayStr ? 'today' : '';
+      // 날짜 생성
+      for (let d = 1; d <= lastDate; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const posts = dataMap[dateStr] || [];
         
         const cell = document.createElement('div');
-        cell.className = `day-cell ${isToday}`;
-        cell.setAttribute('data-date', dateKey);
+        cell.className = 'day-cell';
+        if (dateStr === new Date().toISOString().split('T')[0]) cell.classList.add('today');
         
-        // ● 달력 칸에 점 찍기 (작성자 색상)
-        let dotsHtml = '';
-        if (dayPosts.length > 0) {
-          dotsHtml = `<div class="dots-container">`;
-          const dotCount = Math.min(dayPosts.length, 6);
-          
-          for(let k=0; k<dotCount; k++) {
-            const style = getAuthorStyle(dayPosts[k].author);
-            dotsHtml += `<div class="dot" style="background-color: ${style.dot};" title="${style.name}"></div>`;
-          }
-          
-          if (dayPosts.length > 6) {
-            dotsHtml += `<span class="more-badge">+${dayPosts.length - 6}</span>`;
-          }
-          dotsHtml += `</div>`;
+        // 점(Dot) 찍기
+        let dots = '';
+        if (posts.length > 0) {
+          dots = '<div class="dot-wrapper">';
+          posts.slice(0, 6).forEach(p => {
+             const color = getAuthor(p.author).color;
+             dots += `<span class="dot" style="background-color: ${color}"></span>`;
+          });
+          dots += '</div>';
         }
 
-        cell.innerHTML = `<span class="day-number">${i}</span>${dotsHtml}`;
-        cell.onclick = function() { selectDate(dateKey, this); };
+        cell.innerHTML = `<div class="day-num">${d}</div>${dots}`;
+        
+        // 클릭 이벤트
+        cell.onclick = () => {
+          document.querySelectorAll('.day-cell').forEach(el => el.classList.remove('selected'));
+          cell.classList.add('selected');
+          showDetails(dateStr, posts);
+        };
+
         grid.appendChild(cell);
       }
-    }
+    };
 
-    function selectDate(date, element) {
-      const cells = grid.querySelectorAll('.day-cell');
-      cells.forEach(el => el.classList.remove('selected'));
-      if (element) element.classList.add('selected');
-
-      const [y, m, d] = date.split('-');
-      if (dateTitle) dateTitle.innerText = `${y}년 ${m}월 ${d}일 스케줄`;
-
-      const dayPosts = postsMap[date] || [];
+    // 상세 리스트 표시 함수
+    const showDetails = (date, posts) => {
+      document.getElementById('detailDate').innerText = `${date} 게시물 (${posts.length}건)`;
+      const container = document.getElementById('detailContainer');
       
-      if (!scheduleList) return;
-
-      if (dayPosts.length === 0) {
-        scheduleList.innerHTML = `<div class="empty-message">작성된 게시물이 없습니다. 😴</div>`;
-      } else {
-        let html = '';
-        dayPosts.forEach(post => {
-          const style = getAuthorStyle(post.author);
-          
-          // 리스트 아이템: 왼쪽 이름 뱃지 + 제목
-          html += `
-            <a href="${post.url}" class="schedule-item">
-              <span class="author-badge" style="background-color: ${style.bg}; color: ${style.text};">
-                ${style.name}
-              </span>
-              <span class="post-title">${post.title}</span>
-            </a>
-          `;
-        });
-        scheduleList.innerHTML = html;
+      if (posts.length === 0) {
+        container.innerHTML = '<p style="color:#999; text-align:center;">게시물이 없습니다.</p>';
+        return;
       }
-    }
 
-    function changeMonth(val) {
-      currDate.setMonth(currDate.getMonth() + val);
-      render();
-    }
+      let html = '';
+      posts.forEach(p => {
+        const auth = getAuthor(p.author);
+        html += `
+          <a href="${p.url}" class="post-card">
+            <span class="author-badge" style="background-color: ${auth.color}">${auth.name}</span>
+            <span class="post-title">${p.title}</span>
+          </a>
+        `;
+      });
+      container.innerHTML = html;
+    };
 
-    render();
+    // 버튼 이벤트
+    document.getElementById('prevBtn').onclick = () => { current.setMonth(current.getMonth() - 1); render(); };
+    document.getElementById('nextBtn').onclick = () => { current.setMonth(current.getMonth() + 1); render(); };
+    document.getElementById('todayBtn').onclick = () => { current = new Date(); render(); };
+
+    render(); // 최초 실행
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCalendarApp);
-  } else {
-    initCalendarApp();
-  }
+  // 실행 트리거
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 
-  const pushStateEl = document.getElementById('_pushState');
-  if (pushStateEl) {
-    pushStateEl.addEventListener('hy-push-state-load', initCalendarApp);
-  }
+  // Hydejack 페이지 전환 대응
+  const pushState = document.getElementById('_pushState');
+  if (pushState) pushState.addEventListener('hy-push-state-load', init);
 
 })();
 </script>
