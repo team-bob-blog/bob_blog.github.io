@@ -21,6 +21,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
+      # [추가됨] Python 설정 (3.11 버전 권장)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # [추가됨] 의존성 설치 및 게시물/문서 생성 스크립트 실행
+      - name: Install dependencies and Generate Content
+        run: |
+          pip install pandas
+          python generate_posts.py
+          python create_docs.py
+          python create_author_pages.py
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       

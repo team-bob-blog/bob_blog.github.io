@@ -18,8 +18,11 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Generate docs and author pages
+      # [수정됨] pandas 설치 및 generate_posts.py 실행 추가
+      - name: Generate posts and pages
         run: |
+          pip install pandas
+          python generate_posts.py
           python create_docs.py
           python create_author_pages.py
 
