@@ -21,13 +21,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      # [중요] Python 환경 설정
+      # [추가됨] 1. 파이썬 3.11 환경 설정
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # [중요] 의존성 설치 및 게시물 생성 스크립트 실행
+      # [추가됨] 2. 필수 라이브러리 설치 및 데이터 생성 스크립트 실행
+      # 이 단계가 없으면 달력 데이터가 생성되지 않습니다!
       - name: Install dependencies and Generate Content
         run: |
           pip install pandas

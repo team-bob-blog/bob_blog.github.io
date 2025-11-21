@@ -15,7 +15,7 @@ permalink: /calendar/
 {% assign example_posts = example_posts | sort: 'date' %}
 
 <style>
-/* 캘린더 컨테이너 - 다크 모드 방지 및 강제 스타일링 */
+/* 캘린더 컨테이너 */
 .calendar-wrapper {
   max-width: 1000px;
   margin: 0 auto;
@@ -48,6 +48,11 @@ permalink: /calendar/
   margin: 5px 0 0 0 !important;
   font-size: 0.9rem;
   color: #666 !important;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 8px;
 }
 
 .calendar-nav button {
@@ -112,14 +117,12 @@ permalink: /calendar/
 .day-cell:nth-child(7n) { border-right: none; }
 .day-cell:hover { background-color: #f8f9fa !important; }
 
-/* 선택된 날짜 */
 .day-cell.selected {
   background-color: #e7f5ff !important;
   box-shadow: inset 0 0 0 2px #339af0;
   z-index: 1;
 }
 
-/* 오늘 날짜 */
 .day-cell.today {
   background-color: #fff9db !important;
 }
@@ -149,7 +152,7 @@ permalink: /calendar/
   display: inline-block;
 }
 
-/* 일정 표시 (점) */
+/* 일정 점 */
 .dots-container {
   display: flex;
   flex-wrap: wrap;
@@ -174,7 +177,7 @@ permalink: /calendar/
   text-align: center;
 }
 
-/* 하단 상세 리스트 (주간 스케줄 느낌) */
+/* 하단 상세 패널 */
 .schedule-panel {
   margin-top: 24px;
   background: #ffffff !important;
@@ -192,9 +195,6 @@ permalink: /calendar/
   margin-bottom: 20px !important;
   padding-bottom: 10px;
   border-bottom: 2px solid #339af0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .schedule-list {
@@ -258,7 +258,6 @@ permalink: /calendar/
   font-style: italic;
 }
 
-/* 모바일 대응 */
 @media (max-width: 768px) {
   .day-cell { min-height: 70px; padding: 5px; }
   .dot { width: 6px; height: 6px; }
@@ -317,21 +316,13 @@ permalink: /calendar/
 </script>
 
 <script>
-// 디버깅: 로드 시작 확인
-console.log("Calendar Script Loaded");
-
 function initCalendarApp() {
   const dataScript = document.getElementById('cal-posts-data');
-  if (!dataScript) {
-    console.error("데이터 스크립트를 찾을 수 없습니다.");
-    return; 
-  }
+  if (!dataScript) return;
 
   let posts = [];
   try {
-    // JSON 파싱 시 오류가 발생하지 않도록 jsonify 필터를 적용했습니다.
     posts = JSON.parse(dataScript.textContent);
-    console.log("Loaded Posts:", posts.length);
   } catch (e) {
     console.error("JSON 파싱 오류:", e);
     document.getElementById('monthDisplay').innerText = "데이터 오류";
@@ -345,25 +336,17 @@ function initCalendarApp() {
   });
 
   let currDate = new Date();
-  
-  // DOM 요소 캐싱
   const monthDisplay = document.getElementById('monthDisplay');
   const postCountInfo = document.getElementById('postCountInfo');
   const grid = document.getElementById('calendarGrid');
   const scheduleList = document.getElementById('scheduleList');
   const dateTitle = document.getElementById('selectedDateTitle');
 
-  // 버튼 이벤트 연결
-  const btnPrev = document.getElementById('btnPrev');
-  const btnNext = document.getElementById('btnNext');
-  const btnToday = document.getElementById('btnToday');
-
-  if(btnPrev) btnPrev.onclick = () => changeMonth(-1);
-  if(btnNext) btnNext.onclick = () => changeMonth(1);
-  if(btnToday) btnToday.onclick = () => {
+  document.getElementById('btnPrev').onclick = () => changeMonth(-1);
+  document.getElementById('btnNext').onclick = () => changeMonth(1);
+  document.getElementById('btnToday').onclick = () => {
     currDate = new Date();
     render();
-    // 오늘 날짜 자동 선택
     setTimeout(() => {
       const todayStr = currDate.toISOString().split('T')[0];
       const todayEl = document.querySelector(`.day-cell[data-date="${todayStr}"]`);
@@ -391,12 +374,10 @@ function initCalendarApp() {
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
 
-    // 빈 칸 (이전 달)
     for (let i = 0; i < firstDay; i++) {
       grid.innerHTML += `<div class="day-cell other-month"></div>`;
     }
 
-    // 날짜 채우기
     for (let i = 1; i <= lastDate; i++) {
       const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
       const dayPosts = postsMap[dateKey] || [];
@@ -460,14 +441,12 @@ function initCalendarApp() {
   render();
 }
 
-// 실행 트리거 (Hydejack 호환)
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initCalendarApp);
 } else {
   initCalendarApp();
 }
 
-// Push State 리스너
 const pushStateEl = document.getElementById('_pushState');
 if (pushStateEl) {
   pushStateEl.addEventListener('hy-push-state-load', initCalendarApp);
