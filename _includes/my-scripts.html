@@ -1,5 +1,6 @@
 <script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://unpkg.com/tippy.js@6"></script>
+<script src="/bob_blog.github.io/assets/js/calendar.js"></script>
 
 <script>
   // DOM이 로드된 후 또는 Hydejack의 페이지 전환 후 실행
@@ -42,9 +43,8 @@
 
   // 캘린더 초기화 함수
   function initCalendarIfExists() {
-    if (typeof initCalendarData === 'function' && typeof renderCalendar === 'function') {
-      initCalendarData();
-      renderCalendar();
+    if (document.getElementById('calendar-data') && typeof initCalendar === 'function') {
+      initCalendar();
     }
   }
 
