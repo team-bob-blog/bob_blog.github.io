@@ -21,14 +21,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      # [중요] Python 환경 설정
+      # 파이썬 설정 및 스크립트 실행 (이게 없으면 달력 데이터가 0개임)
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # [중요] 의존성 설치 및 게시물 생성 스크립트 실행
-      - name: Install dependencies and Generate Content
+      - name: Generate Posts from CSV
         run: |
           pip install pandas
           python generate_posts.py
