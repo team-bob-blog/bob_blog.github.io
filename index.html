@@ -9,15 +9,15 @@ hide_description: true
 <div class="filter-section">
   <div class="filter-group">
     <label>정렬:</label>
-    <button class="filter-btn active" data-sort="newest">최신순</button>
-    <button class="filter-btn" data-sort="oldest">오래된순</button>
+    <button class="filter-btn active" onclick="handleSort(this, 'newest')">최신순</button>
+    <button class="filter-btn" onclick="handleSort(this, 'oldest')">오래된순</button>
   </div>
   <div class="filter-group">
     <label>작성자:</label>
-    <button class="filter-btn author-btn active" data-author="all">전체</button>
+    <button class="filter-btn author-btn active" onclick="handleAuthor(this, 'all')">전체</button>
     {% for author in site.data.authors %}
       {% assign author_color = site.data.author_colors[author[1].name] | default: '#4a90e2' %}
-      <button class="filter-btn author-btn" data-author="{{ author[0] }}" style="--author-color: {{ author_color }};">{{ author[1].name }}</button>
+      <button class="filter-btn author-btn" onclick="handleAuthor(this, '{{ author[0] }}')" style="--author-color: {{ author_color }};">{{ author[1].name }}</button>
     {% endfor %}
   </div>
 </div>
@@ -112,70 +112,58 @@ hide_description: true
 </style>
 
 <script>
-(function() {
-  function initFilters() {
-    const grid = document.getElementById('post-grid');
-    if (!grid) return;
-    
-    const cards = Array.from(grid.querySelectorAll('.modern-post-card'));
-    const sortBtns = document.querySelectorAll('[data-sort]');
-    const authorBtns = document.querySelectorAll('[data-author]');
-    
-    let currentSort = 'newest';
-    let currentAuthor = 'all';
+var currentSort = 'newest';
+var currentAuthor = 'all';
 
-    function filterAndSort() {
-      cards.forEach(card => {
-        const author = card.dataset.author;
-        if (currentAuthor === 'all' || author === currentAuthor) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      });
-
-      const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
-      visibleCards.sort((a, b) => {
-        const dateA = parseInt(a.dataset.date);
-        const dateB = parseInt(b.dataset.date);
-        return currentSort === 'newest' ? dateB - dateA : dateA - dateB;
-      });
-
-      visibleCards.forEach(card => grid.appendChild(card));
-      cards.filter(c => c.classList.contains('hidden')).forEach(card => grid.appendChild(card));
+function filterAndSort() {
+  var grid = document.getElementById('post-grid');
+  if (!grid) return;
+  
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.modern-post-card'));
+  
+  cards.forEach(function(card) {
+    var author = card.getAttribute('data-author');
+    if (currentAuthor === 'all' || author === currentAuthor) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
     }
+  });
 
-    sortBtns.forEach(btn => {
-      btn.onclick = function() {
-        sortBtns.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        currentSort = this.dataset.sort;
-        filterAndSort();
-      };
-    });
+  var visibleCards = cards.filter(function(c) {
+    return c.style.display !== 'none';
+  });
+  
+  visibleCards.sort(function(a, b) {
+    var dateA = parseInt(a.getAttribute('data-date'));
+    var dateB = parseInt(b.getAttribute('data-date'));
+    return currentSort === 'newest' ? dateB - dateA : dateA - dateB;
+  });
 
-    authorBtns.forEach(btn => {
-      btn.onclick = function() {
-        authorBtns.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        currentAuthor = this.dataset.author;
-        filterAndSort();
-      };
-    });
-  }
+  visibleCards.forEach(function(card) {
+    grid.appendChild(card);
+  });
+  
+  cards.filter(function(c) {
+    return c.style.display === 'none';
+  }).forEach(function(card) {
+    grid.appendChild(card);
+  });
+}
 
-  // 즉시 실행
-  initFilters();
-  
-  // DOMContentLoaded
-  document.addEventListener('DOMContentLoaded', initFilters);
-  
-  // Hydejack push-state 지원
-  if (window._pushState) {
-    document.addEventListener('hy-push-state-load', initFilters);
-  }
-  
-  // 추가 안전장치
-  setTimeout(initFilters, 500);
-})();
+function handleSort(btn, sortType) {
+  currentSort = sortType;
+  var sortBtns = document.querySelectorAll('.filter-group:first-child .filter-btn');
+  sortBtns.forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  filterAndSort();
+}
+
+function handleAuthor(btn, author) {
+  currentAuthor = author;
+  var authorBtns = document.querySelectorAll('.author-btn');
+  authorBtns.forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  filterAndSort();
+}
 </script>
