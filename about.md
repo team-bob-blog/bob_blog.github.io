@@ -8,150 +8,224 @@ sitemap: false
 ---
 
 <style>
-.team-container {
-  max-width: 900px;
+/* About Page Specific Styles */
+.about-container {
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
 }
 
-.team-intro {
+.team-intro-section {
   text-align: center;
-  margin-bottom: 40px;
-  padding: 30px;
+  margin-bottom: 60px;
+  padding: 60px 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
+  border-radius: 20px;
   color: white;
+  box-shadow: 0 10px 30px rgba(118, 75, 162, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.team-intro h2 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
+.team-intro-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.team-intro-content {
+  position: relative;
+  z-index: 1;
+}
+
+.team-intro-section h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
   color: white !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.team-intro p {
-  font-size: 1rem;
+.team-intro-section p {
+  font-size: 1.1rem;
   line-height: 1.8;
   opacity: 0.95;
-  margin: 0;
+  margin: 0 auto;
+  max-width: 600px;
 }
 
 .member-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
-  margin-top: 30px;
+  gap: 30px;
+  margin-top: 40px;
 }
 
 .member-card {
   background: #fff;
-  border-radius: 16px;
-  padding: 30px 25px;
+  border-radius: 20px;
+  padding: 40px 30px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid #f0f0f0;
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.02);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .member-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+
+.member-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.member-card:hover::after {
+  opacity: 1;
+}
+
+.member-img-wrapper {
+  width: 140px;
+  height: 140px;
+  margin-bottom: 25px;
+  position: relative;
 }
 
 .member-card img {
-  width: 120px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 20px;
-  border: 4px solid #f0f0f0;
+  border: 4px solid #fff;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+
+.member-card:hover img {
+  transform: scale(1.05);
 }
 
 .member-card h3 {
-  font-size: 1.3rem;
-  margin: 0 0 10px 0;
-  color: #333;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: #2d3436;
 }
 
 .member-card .goal {
-  font-size: 0.9rem;
-  color: #666;
+  font-size: 0.95rem;
+  color: #636e72;
   line-height: 1.6;
-  margin-bottom: 15px;
-  min-height: 50px;
+  margin-bottom: 25px;
+  flex-grow: 1;
 }
 
 .member-card .blog-link {
-  display: inline-block;
-  padding: 8px 20px;
-  background: #4a90e2;
-  color: white !important;
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 24px;
+  background: #f1f3f5;
+  color: #495057 !important;
+  border-radius: 50px;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 .member-card .blog-link:hover {
-  background: #357abd;
-  text-decoration: none;
+  background: #4a90e2;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
-@media (max-width: 600px) {
-  .member-grid {
-    grid-template-columns: 1fr;
-  }
-  .team-intro h2 {
-    font-size: 1.4rem;
-  }
+@media (max-width: 768px) {
+  .team-intro-section h2 { font-size: 2rem; }
+  .member-grid { grid-template-columns: 1fr; }
 }
 </style>
 
-<div class="team-container">
+<div class="about-container">
 
-<div class="team-intro">
-  <h2>🚀 구미 3반 블로그 스터디</h2>
-  <p>
-    개인적인 CS 공부를 블로그를 통해 정리하고<br>
-    스터디 구성원에게 지식을 공유하는 스터디입니다.
-  </p>
+<div class="team-intro-section">
+  <div class="team-intro-content">
+    <h2>🚀 구미 3반 블로그 스터디</h2>
+    <p>
+      우리는 함께 성장하는 개발자들입니다.<br>
+      개인적인 CS 공부를 정리하고, 서로의 지식을 공유하며<br>
+      더 나은 내일을 만들어갑니다.
+    </p>
+  </div>
 </div>
 
 <div class="member-grid">
 
 <div class="member-card">
-  <img src="{{ '/assets/img/profile/김강연.png' | relative_url }}" alt="김강연">
+  <div class="member-img-wrapper">
+    <img src="{{ '/assets/img/profile/김강연.png' | relative_url }}" alt="김강연" onerror="this.src='{{ '/assets/img/profile/default.png' | relative_url }}'">
+  </div>
   <h3>김강연</h3>
-  <p class="goal">파이썬 심화 학습 및 백엔드 기술 공부<br>블로그 작성 습관 만들기</p>
+  <p class="goal">"꾸준함이 재능을 이긴다"<br>파이썬 심화 학습 및 백엔드 기술 정복</p>
   <a href="https://derek0517.tistory.com/" target="_blank" class="blog-link">블로그 방문</a>
 </div>
 
 <div class="member-card">
-  <img src="{{ '/assets/img/profile/장진욱.png' | relative_url }}" alt="장진욱">
+  <div class="member-img-wrapper">
+    <img src="{{ '/assets/img/profile/장진욱.png' | relative_url }}" alt="장진욱" onerror="this.src='{{ '/assets/img/profile/default.png' | relative_url }}'">
+  </div>
   <h3>장진욱</h3>
-  <p class="goal">알고리즘 스터디 당일 바로 작성<br>주 1회 이상 자유 주제 작성</p>
+  <p class="goal">"CS On CS"<br>컴퓨터 구조와 운영체제의 깊이를 더하다</p>
   <a href="https://jjw3300.tistory.com/" target="_blank" class="blog-link">블로그 방문</a>
 </div>
 
 <div class="member-card">
-  <img src="{{ '/assets/img/profile/정수민.png' | relative_url }}" alt="정수민">
+  <div class="member-img-wrapper">
+    <img src="{{ '/assets/img/profile/정수민.png' | relative_url }}" alt="정수민" onerror="this.src='{{ '/assets/img/profile/default.png' | relative_url }}'">
+  </div>
   <h3>정수민</h3>
-  <p class="goal">항상 1등한다는 마인드</p>
+  <p class="goal">"Always Number One"<br>알고리즘 마스터를 향한 여정</p>
   <a href="https://ss-coding-99.tistory.com/" target="_blank" class="blog-link">블로그 방문</a>
 </div>
 
 <div class="member-card">
-  <img src="{{ '/assets/img/profile/배재유.png' | relative_url }}" alt="배재유">
+  <div class="member-img-wrapper">
+    <img src="{{ '/assets/img/profile/배재유.png' | relative_url }}" alt="배재유" onerror="this.src='{{ '/assets/img/profile/default.png' | relative_url }}'">
+  </div>
   <h3>배재유</h3>
-  <p class="goal">개발자의 꿈은 기록하다<br>습관으로 만들자</p>
+  <p class="goal">"기록은 기억을 지배한다"<br>Java와 시스템 프로그래밍의 모든 것</p>
   <a href="https://platypus3036.tistory.com/" target="_blank" class="blog-link">블로그 방문</a>
 </div>
 
 <div class="member-card">
-  <img src="{{ '/assets/img/profile/김민재.png' | relative_url }}" alt="김민재">
+  <div class="member-img-wrapper">
+    <img src="{{ '/assets/img/profile/김민재.png' | relative_url }}" alt="김민재" onerror="this.src='{{ '/assets/img/profile/default.png' | relative_url }}'">
+  </div>
   <h3>김민재</h3>
-  <p class="goal">스스로 학습하고 정리하는 관성 만들기</p>
+  <p class="goal">"학습의 관성"<br>스스로 학습하고 정리하는 습관 만들기</p>
   <a href="https://blopz.tistory.com/" target="_blank" class="blog-link">블로그 방문</a>
 </div>
 
