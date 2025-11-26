@@ -293,16 +293,18 @@ permalink: /calendar/
 (function() {
   // 1. Jekyll이 렌더링한 포스트 데이터를 자바스크립트 배열로 직접 주입
   const rawData = [
-    {% for post in all_posts %}
+    {% for post in site.posts %}
     {
       "date": "{{ post.date | date: '%Y-%m-%d' }}",
       "title": {{ post.title | jsonify }},
-      "url": {{ post.url | relative_url | jsonify }},
+      "url": "{{ post.url | relative_url }}",
       "category": "{{ post.categories | first | default: 'Etc' }}",
       "author": "{{ post.author | default: 'unknown' }}"
     }{% unless forloop.last %},{% endunless %}
     {% endfor %}
   ];
+
+  console.log("Calendar rawData:", rawData.length, "posts loaded");
 
   // 2. 작성자별 색상 정의
   const authorColors = {
@@ -319,6 +321,8 @@ permalink: /calendar/
   }
 
   function initCalendarApp() {
+    console.log("initCalendarApp called, rawData.length:", rawData.length);
+    
     // 데이터 개수 체크
     if (rawData.length === 0) {
       const debugEl = document.getElementById('debugMsg');
