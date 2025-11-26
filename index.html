@@ -5,18 +5,31 @@ description: 최신 기술 블로그 포스트
 hide_description: true
 ---
 
+<!-- 필터 섹션 -->
+<div class="filter-section">
+  <div class="filter-group">
+    <label>정렬:</label>
+    <button class="filter-btn active" data-sort="newest">최신순</button>
+    <button class="filter-btn" data-sort="oldest">오래된순</button>
+  </div>
+  <div class="filter-group">
+    <label>작성자:</label>
+    <button class="filter-btn author-btn active" data-author="all">전체</button>
+    {% for author in site.data.authors %}
+      {% assign author_color = site.data.author_colors[author[1].name] | default: '#4a90e2' %}
+      <button class="filter-btn author-btn" data-author="{{ author[0] }}" style="--author-color: {{ author_color }};">{{ author[1].name }}</button>
+    {% endfor %}
+  </div>
+</div>
+
 <div class="home-posts-container">
-  <div class="post-card-grid">
-    {% if paginator.posts %}
-      {% assign posts = paginator.posts %}
-    {% else %}
-      {% assign posts = site.posts | slice: 0, 10 %}
-    {% endif %}
+  <div class="post-card-grid" id="post-grid">
+    {% assign posts = site.posts %}
     {% for post in posts %}
-      <a href="{{ post.url | relative_url }}" class="modern-post-card">
+      {% assign author_data = site.data.authors[post.author] %}
+      {% assign author_color = site.data.author_colors[author_data.name] | default: '#4a90e2' %}
+      <a href="{{ post.url | relative_url }}" class="modern-post-card" data-author="{{ post.author }}" data-date="{{ post.date | date: '%Y%m%d' }}">
         {% if post.author %}
-          {% assign author_data = site.data.authors[post.author] %}
-          {% assign author_color = site.data.author_colors[author_data.name] | default: '#4a90e2' %}
           <span class="modern-post-author" style="background-color: {{ author_color }};">{{ author_data.name }}</span>
         {% endif %}
         <h3 class="modern-post-card-title">{{ post.title }}</h3>
@@ -30,21 +43,124 @@ hide_description: true
       </a>
     {% endfor %}
   </div>
-
-  <!-- Pagination Links -->
-  {% if paginator.total_pages > 1 %}
-  <div class="pagination">
-    {% if paginator.previous_page %}
-      {% if paginator.previous_page == 1 %}
-        <a href="{{ '/' | relative_url }}" class="previous">Previous</a>
-      {% else %}
-        <a href="{{ paginator.previous_page_path | relative_url }}" class="previous">Previous</a>
-      {% endif %}
-    {% endif %}
-    <span class="page_number">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
-    {% if paginator.next_page %}
-      <a href="{{ paginator.next_page_path | relative_url }}" class="next">Next</a>
-    {% endif %}
-  </div>
-  {% endif %}
 </div>
+
+<style>
+.filter-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  background: white;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  color: #495057;
+}
+
+.filter-btn:hover {
+  border-color: #4a90e2;
+  color: #4a90e2;
+}
+
+.filter-btn.active {
+  background: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}
+
+.author-btn.active {
+  background: var(--author-color, #4a90e2);
+  border-color: var(--author-color, #4a90e2);
+}
+
+.modern-post-card.hidden {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .filter-section {
+    flex-direction: column;
+    gap: 15px;
+  }
+  .filter-group {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const grid = document.getElementById('post-grid');
+  const cards = Array.from(grid.querySelectorAll('.modern-post-card'));
+  const sortBtns = document.querySelectorAll('[data-sort]');
+  const authorBtns = document.querySelectorAll('[data-author]');
+  
+  let currentSort = 'newest';
+  let currentAuthor = 'all';
+
+  function filterAndSort() {
+    // Filter by author
+    cards.forEach(card => {
+      const author = card.dataset.author;
+      if (currentAuthor === 'all' || author === currentAuthor) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Sort
+    const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
+    visibleCards.sort((a, b) => {
+      const dateA = parseInt(a.dataset.date);
+      const dateB = parseInt(b.dataset.date);
+      return currentSort === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
+    // Reorder in DOM
+    visibleCards.forEach(card => grid.appendChild(card));
+    cards.filter(c => c.classList.contains('hidden')).forEach(card => grid.appendChild(card));
+  }
+
+  sortBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sortBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSort = btn.dataset.sort;
+      filterAndSort();
+    });
+  });
+
+  authorBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      authorBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentAuthor = btn.dataset.author;
+      filterAndSort();
+    });
+  });
+});
+</script>
