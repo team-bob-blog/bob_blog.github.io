@@ -1,18 +1,14 @@
 ---
 layout: page
-title: example 팀 포스팅 일정
+title: 팀 포스팅 일정
 description: >
-  example/_posts 아래에 있는 글들을 날짜별로 묶어 한눈에 확인할 수 있는 달력입니다.
+  모든 포스트를 날짜별로 묶어 한눈에 확인할 수 있는 달력입니다.
 hide_description: true
 sitemap: false
 permalink: /calendar/
 ---
 
-{% assign example_posts = site.categories.example %}
-{% if example_posts == empty %}
-  {% assign example_posts = site.posts | where_exp: 'post', 'post.path contains "example/_posts/"' %}
-{% endif %}
-{% assign example_posts = example_posts | sort: 'date' %}
+{% assign all_posts = site.posts | sort: 'date' %}
 
 <style>
 /* 캘린더 컨테이너 */
@@ -309,13 +305,13 @@ permalink: /calendar/
 
 <script type="application/json" id="cal-posts-data">
 [
-{% for post in example_posts %}
+{% for post in all_posts %}
   {
     "date": "{{ post.date | date: "%Y-%m-%d" }}",
     "title": {{ post.title | jsonify }},
     "url": {{ post.url | relative_url | jsonify }},
     "category": "{{ post.categories | first | default: 'Etc' }}",
-    "author": "{{ post.author }}"
+    "author": "{{ post.author | default: 'unknown' }}"
   }{% unless forloop.last %},{% endunless %}
 {% endfor %}
 ]
