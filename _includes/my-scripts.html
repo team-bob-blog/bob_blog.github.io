@@ -41,17 +41,27 @@
     });
   }
 
-  // 캘린더 초기화 함수
+  // 캘린더 초기화 함수 - DOM에서 데이터 읽어오기
   function initCalendarIfExists() {
     var dataEl = document.getElementById('calendar-data');
     if (dataEl && typeof initCalendar === 'function') {
+      console.log('Calendar: Found data element, initializing...');
       initCalendar();
+    }
+  }
+
+  // 페이지 로드 완료 대기 후 실행
+  function runOnReady(fn) {
+    if (document.readyState === 'complete') {
+      fn();
+    } else {
+      window.addEventListener('load', fn);
     }
   }
 
   // 초기 페이지 로드 시 실행
   initializePreviewLinks();
-  setTimeout(initCalendarIfExists, 100);
+  runOnReady(initCalendarIfExists);
 
   // Hydejack의 Push State 이벤트 리스너 등록
   // 페이지가 전환될 때마다 스크립트를 다시 초기화해야 함
@@ -59,7 +69,13 @@
   if (pushStateEl) {
     pushStateEl.addEventListener('hy-push-state-load', function() {
       initializePreviewLinks();
-      setTimeout(initCalendarIfExists, 100);
+      // push-state 후에는 DOM이 이미 로드됨
+      setTimeout(initCalendarIfExists, 50);
+    });
+    
+    // after 이벤트도 추가 (컨텐츠가 완전히 교체된 후)
+    pushStateEl.addEventListener('hy-push-state-after', function() {
+      setTimeout(initCalendarIfExists, 50);
     });
   }
 </script>
