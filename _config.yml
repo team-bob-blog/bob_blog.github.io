@@ -49,8 +49,6 @@ author:
 
 # Add links to the sidebar.
 menu:
-  - title:             Blog
-    url:               /blog/
   - title:             About Team
     url:               /about/
   - title:             개인별 게시물
@@ -78,7 +76,7 @@ permalink:             /:categories/:year-:month-:day-:title/
 # Pagination configuration (used by the `blog` layout)
 # Pagination 설정
 paginate: 10
-paginate_path: '/blog/page:num/'
+paginate_path: '/page:num/'
 
 # _config.yml
 data_dir: _data
