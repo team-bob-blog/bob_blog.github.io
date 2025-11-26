@@ -2,211 +2,271 @@
 layout: page
 title: 개인별 게시물 목록
 description: >
-    팀원별 게시물 목록을 확인하고 해당 글로 이동할 수 있습니다. (10개씩 분리)
+    팀원별 게시물 목록을 확인하고 해당 글로 이동할 수 있습니다.
 hide_description: true
 sitemap: false
 permalink: /docs/
 ---
+
 <style>
-/* ... (스타일 코드는 이전과 동일하게 유지) ... */
+.docs-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.docs-header {
+  text-align: center;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.docs-header h1 {
+  font-size: 1.6rem;
+  margin: 0 0 10px 0;
+  color: white !important;
+}
+
+.docs-header p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
 .author-section {
-    margin-bottom: 40px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    background: #ffffff;
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
 }
 
 .author-header {
-    background: #4a90e2;
-    color: white;
-    padding: 15px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.author-header h2 {
-    margin: 0;
-    color: white;
-    font-size: 1.6rem;
-    font-weight: 500;
+.author-header:hover {
+  background: #fafafa;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.author-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.post-count {
+  background: #e8f4fd;
+  color: #1a73e8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
 .posts-container {
-    padding: 0 20px;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .post-item {
-    display: flex;
-    flex-direction: column;
-    padding: 15px 0;
-    border-bottom: 1px solid #eeeeee;
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f5f5f5;
+  transition: background 0.2s;
+  text-decoration: none !important;
 }
 
 .post-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .post-item:hover {
-    background-color: #f7f7f7;
-    cursor: pointer;
+  background: #f8f9fa;
 }
 
-.post-meta-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 5px;
+.post-date-badge {
+  min-width: 50px;
+  text-align: center;
+  margin-right: 15px;
 }
 
-.post-title-link {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #2c3e50;
-    text-decoration: none;
-    margin-bottom: 5px;
+.post-date-badge .day {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
 }
 
-.post-title-link:hover {
-    color: #4a90e2;
-    text-decoration: underline;
+.post-date-badge .month {
+  font-size: 0.7rem;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.post-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333 !important;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .post-category {
-    display: inline-block;
-    padding: 4px 10px;
-    background: #e6f7ff;
-    color: #1890ff;
-    border-radius: 4px;
-    font-size: 0.8em;
-    font-weight: 500;
-    margin-right: 8px;
-}
-
-.post-date {
-    color: #95a5a6;
-    white-space: nowrap;
-    font-size: 0.85em;
+  display: inline-block;
+  padding: 2px 8px;
+  background: #e8f4fd;
+  color: #1a73e8;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
 .post-tags {
-    color: #95a5a6;
-    font-size: 0.85em;
-    margin-left: 10px;
-}
-/* 페이지네이션 관련 스타일 제거 */
-/* .pagination-links {
-    text-align: center;
-    padding: 15px 0;
-    border-top: 1px solid #eee;
-    margin-top: 10px;
+  color: #999;
+  font-size: 0.75rem;
 }
 
-.pagination-links a, .pagination-links span {
-    padding: 8px 12px;
-    margin: 0 4px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 0.9em;
-    font-weight: 600;
+.no-posts {
+  padding: 30px;
+  text-align: center;
+  color: #999;
+  font-style: italic;
 }
 
-.pagination-links a {
-    background: #e6f7ff;
-    color: #4a90e2;
+.view-more {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: #f8f9fa;
+  color: #666;
+  font-size: 0.85rem;
+  text-decoration: none;
+  border-top: 1px solid #f0f0f0;
 }
 
-.pagination-links span {
-    background: #4a90e2;
-    color: white;
-} */
+.view-more:hover {
+  background: #f0f0f0;
+  color: #333;
+}
 
+@media (max-width: 600px) {
+  .docs-header h1 { font-size: 1.3rem; }
+  .post-date-badge { display: none; }
+  .author-header { padding: 12px 15px; }
+  .post-item { padding: 12px 15px; }
+}
 </style>
 
-# 🧑‍💻 개인별 게시물 문서 메인
+<div class="docs-container">
 
-<p style="color: #666; margin-bottom: 30px;">
-이 페이지는 팀원별로 작성된 포스트 목록을 제공합니다. (페이지당 10개)
-</p>
+<div class="docs-header">
+  <h1>📚 팀원별 게시물</h1>
+  <p>각 팀원이 작성한 포스트를 한눈에 확인하세요</p>
+</div>
 
 {% assign team_members = site.data.authors %}
-
-{% comment %} 
-페이지네이션을 위해 URL에서 쿼리 파라미터를 가져와 분리합니다. 
-각 작가별로 'page_작가shortname' 형태의 파라미터를 기대합니다.
-{% endcomment %}
-
 {% assign posts_per_page = 10 %}
 
 {% for author_entry in team_members %}
-    {% assign author_shortname = author_entry[0] %}
-    {% assign author_info = author_entry[1] %}
-    {% assign author_korean_name = author_info.name %}
+  {% assign author_shortname = author_entry[0] %}
+  {% assign author_info = author_entry[1] %}
+  {% assign author_korean_name = author_info.name %}
+  {% assign first_char = author_korean_name | slice: 0 %}
 
-    {% comment %} 
-    쿼리 파라미터에서 현재 작가의 페이지 번호를 찾습니다.
-    예시: /docs/?page_kimkangyeon=2
-    Liquid는 직접 쿼리 파싱이 불가능하므로, 기본적으로 1로 설정합니다.
-    {% endcomment %}
-    
-    {% assign current_author_page = 1 %}
-    
-    {% comment %} 이 부분은 서버 빌드 환경의 제약으로 인해 Liquid만으로 동적 쿼리 파싱은 불가능하며, 
-    모든 작가에게 page=1로 기본값이 적용됩니다. 실제 페이지 이동은 링크를 수동 클릭해야 합니다. {% endcomment %}
+  {% if author_korean_name %}
+    {% assign posts_by_author = site.posts | where: "author", author_shortname | sort: 'date' | reverse %}
+    {% assign total_posts = posts_by_author.size %}
 
-    {% if author_korean_name %}
-      
 <div class="author-section">
-    <div class="author-header">
-        <h2>{{ author_korean_name }}</h2>
+  <div class="author-header">
+    <div class="author-info">
+      <div class="author-avatar">{{ first_char }}</div>
+      <h3 class="author-name">{{ author_korean_name }}</h3>
     </div>
+    <span class="post-count">{{ total_posts }}개</span>
+  </div>
 
-{% assign posts_by_author = site.posts | where: "author", author_shortname | sort: 'date' | reverse %}
-{% assign total_posts = posts_by_author.size %}
-
-{% assign total_pages = total_posts | divided_by: posts_per_page %}
-{% assign remainder = total_posts | modulo: posts_per_page %}
-{% if remainder > 0 %}{% assign total_pages = total_pages | plus: 1 %}{% endif %}
-
-{% assign offset = current_author_page | minus: 1 | times: posts_per_page %}
-{% assign paginated_posts = posts_by_author | limit: posts_per_page | offset: offset %}
-
-
-    <div class="posts-container">
-
-{% if total_posts == 0 %}
-    <div class="no-posts" style="padding: 20px; color: #95a5a6;">
-        작성된 게시물이 없습니다.
-    </div>
-{% else %}
-
-    {% comment %} 포스트 목록 출력 {% endcomment %}
-    {% for post in paginated_posts %}
-      
-        <div class="post-item" onclick="window.location.href='{{ post.url | relative_url }}'">
-            <a href="{{ post.url | relative_url }}" class="post-title-link">
-                {{ post.title }}
-            </a>
-            <div class="post-meta-row">
-                <div>
-                    {% for category in post.categories %}
-                        {% unless category == "example" %}
-                            <span class="post-category">{{ category }}</span>
-                        {% endunless %}
-                    {% endfor %}
-                    <span class="post-tags">#{{ post.tags | join: ' #' }}</span>
-                </div>
-                <div class="post-date">{{ post.date | date: "%Y년 %m월 %d일" }}</div>
+  <div class="posts-container">
+    {% if total_posts == 0 %}
+      <div class="no-posts">아직 작성된 게시물이 없습니다</div>
+    {% else %}
+      {% for post in posts_by_author limit: posts_per_page %}
+        <a href="{{ post.url | relative_url }}" class="post-item">
+          <div class="post-date-badge">
+            <div class="day">{{ post.date | date: "%d" }}</div>
+            <div class="month">{{ post.date | date: "%b" }}</div>
+          </div>
+          <div class="post-content">
+            <div class="post-title">{{ post.title }}</div>
+            <div class="post-meta">
+              {% for category in post.categories %}
+                {% unless category == "example" %}
+                  <span class="post-category">{{ category }}</span>
+                {% endunless %}
+              {% endfor %}
+              {% if post.tags.size > 0 %}
+                <span class="post-tags">#{{ post.tags | first }}</span>
+              {% endif %}
             </div>
-        </div>
-        
-    {% endfor %}
-    
-    </div>
-    
-    {% comment %} 수동 페이지네이션 링크 생성 코드를 제거했습니다. {% endcomment %}
-    
-
-{% endif %}
-</div>
-    
+          </div>
+        </a>
+      {% endfor %}
+      {% if total_posts > posts_per_page %}
+        <a href="{{ '/docs/authors/' | append: author_shortname | append: '/' | relative_url }}" class="view-more">
+          + {{ total_posts | minus: posts_per_page }}개 더보기
+        </a>
+      {% endif %}
     {% endif %}
+  </div>
+</div>
+
+  {% endif %}
 {% endfor %}
+
+</div>
