@@ -8,7 +8,11 @@ permalink: /
 
 <div class="home-posts-container">
   <div class="post-card-grid">
-    {% assign posts = paginator.posts | default: site.posts %}
+    {% if paginator.posts %}
+      {% assign posts = paginator.posts %}
+    {% else %}
+      {% assign posts = site.posts | slice: 0, 10 %}
+    {% endif %}
     {% for post in posts %}
       <a href="{{ post.url | relative_url }}" class="modern-post-card">
         <h3 class="modern-post-card-title">{{ post.title }}</h3>
@@ -16,9 +20,6 @@ permalink: /
           <span class="modern-post-date">{{ post.date | date: "%Y.%m.%d" }}</span>
           {% if post.categories.size > 0 %}
             {% assign first_category = post.categories | first %}
-            {% if first_category == "example" and post.categories.size > 1 %}
-                {% assign first_category = post.categories[1] %}
-            {% endif %}
             <span class="modern-post-category">{{ first_category }}</span>
           {% endif %}
         </div>

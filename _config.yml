@@ -76,7 +76,7 @@ permalink:             /:categories/:year-:month-:day-:title/
 # Pagination configuration (used by the `blog` layout)
 # Pagination 설정
 paginate: 10
-paginate_path: '/example/page:num/'
+paginate_path: '/page:num/'
 
 # _config.yml
 data_dir: _data
@@ -319,6 +319,7 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - functions
+  - example/
 include:
   - _routes.json
   - .well-known
