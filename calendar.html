@@ -289,25 +289,35 @@ permalink: /calendar/
   <div id="debugMsg"></div>
 </div>
 
+<script type="application/json" id="calendar-data">
+[
+  {% for post in site.posts %}
+  {
+    "date": "{{ post.date | date: '%Y-%m-%d' }}",
+    "title": {{ post.title | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "category": {{ post.categories | first | default: 'Etc' | jsonify }},
+    "author": {{ post.author | default: 'unknown' | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]
+</script>
+
 <script>
 (function() {
-  // 1. Jekyll이 렌더링한 포스트 데이터를 자바스크립트 배열로 직접 주입
-  const rawData = [
-    {% for post in site.posts %}
-    {
-      "date": "{{ post.date | date: '%Y-%m-%d' }}",
-      "title": {{ post.title | jsonify }},
-      "url": "{{ post.url | relative_url }}",
-      "category": "{{ post.categories | first | default: 'Etc' }}",
-      "author": "{{ post.author | default: 'unknown' }}"
-    }{% unless forloop.last %},{% endunless %}
-    {% endfor %}
-  ];
+  var rawData = [];
+  try {
+    var dataEl = document.getElementById('calendar-data');
+    if (dataEl) {
+      rawData = JSON.parse(dataEl.textContent);
+    }
+  } catch(e) {
+    console.error("Calendar data parse error:", e);
+  }
 
-  console.log("Calendar rawData:", rawData.length, "posts loaded");
+  console.log("Calendar loaded:", rawData.length, "posts");
 
-  // 2. 작성자별 색상 정의
-  const authorColors = {
+  var authorColors = {
     'jungsumin':   { name: '정수민', color: '#339af0' },
     'kimkangyeon': { name: '김강연', color: '#ff6b6b' },
     'jangjinwook': { name: '장진욱', color: '#51cf66' },
@@ -321,125 +331,120 @@ permalink: /calendar/
   }
 
   function initCalendarApp() {
-    console.log("initCalendarApp called, rawData.length:", rawData.length);
-    
-    // 데이터 개수 체크
+    var monthDisplay = document.getElementById('monthDisplay');
+    var postCountInfo = document.getElementById('postCountInfo');
+    var grid = document.getElementById('calendarGrid');
+    var scheduleList = document.getElementById('scheduleList');
+    var dateTitle = document.getElementById('selectedDateTitle');
+    var debugEl = document.getElementById('debugMsg');
+
     if (rawData.length === 0) {
-      const debugEl = document.getElementById('debugMsg');
       if (debugEl) {
-        debugEl.innerHTML = "⚠️ 포스트 데이터가 없습니다. _posts 폴더를 확인해주세요.";
+        debugEl.innerHTML = "⚠️ 포스트 데이터가 없습니다.";
         debugEl.style.display = 'block';
       }
-      document.getElementById('monthDisplay').innerText = "데이터 없음";
+      if (monthDisplay) monthDisplay.innerText = "데이터 없음";
       return;
     }
 
-    const postsMap = {};
-    rawData.forEach(p => {
+    var postsMap = {};
+    rawData.forEach(function(p) {
       if (!postsMap[p.date]) postsMap[p.date] = [];
       postsMap[p.date].push(p);
     });
 
-    let currDate = new Date();
-    const monthDisplay = document.getElementById('monthDisplay');
-    const postCountInfo = document.getElementById('postCountInfo');
-    const grid = document.getElementById('calendarGrid');
-    const scheduleList = document.getElementById('scheduleList');
-    const dateTitle = document.getElementById('selectedDateTitle');
+    var currDate = new Date();
 
-    // 버튼 이벤트 연결
-    const btnPrev = document.getElementById('btnPrev');
-    const btnNext = document.getElementById('btnNext');
-    const btnToday = document.getElementById('btnToday');
+    var btnPrev = document.getElementById('btnPrev');
+    var btnNext = document.getElementById('btnNext');
+    var btnToday = document.getElementById('btnToday');
 
-    if (btnPrev) btnPrev.onclick = () => changeMonth(-1);
-    if (btnNext) btnNext.onclick = () => changeMonth(1);
-    if (btnToday) btnToday.onclick = () => {
-      currDate = new Date();
-      render();
-    };
+    if (btnPrev) btnPrev.onclick = function() { changeMonth(-1); };
+    if (btnNext) btnNext.onclick = function() { changeMonth(1); };
+    if (btnToday) btnToday.onclick = function() { currDate = new Date(); render(); };
 
     function render() {
-      const year = currDate.getFullYear();
-      const month = currDate.getMonth();
-      const todayStr = new Date().toISOString().split('T')[0];
+      var year = currDate.getFullYear();
+      var month = currDate.getMonth();
+      var todayStr = new Date().toISOString().split('T')[0];
 
-      if (monthDisplay) monthDisplay.innerText = `${year}년 ${month + 1}월`;
-      
-      let count = 0;
-      Object.keys(postsMap).forEach(date => {
-        if (date.startsWith(`${year}-${String(month + 1).padStart(2, '0')}`)) {
+      if (monthDisplay) monthDisplay.innerText = year + '년 ' + (month + 1) + '월';
+
+      var count = 0;
+      var monthPrefix = year + '-' + String(month + 1).padStart(2, '0');
+      Object.keys(postsMap).forEach(function(date) {
+        if (date.indexOf(monthPrefix) === 0) {
           count += postsMap[date].length;
         }
       });
-      if (postCountInfo) postCountInfo.innerText = `총 ${count}개의 포스팅`;
+      if (postCountInfo) postCountInfo.innerText = '총 ' + count + '개의 포스팅';
 
       if (!grid) return;
-      grid.innerHTML = "";
+      grid.innerHTML = '';
 
-      const firstDay = new Date(year, month, 1).getDay();
-      const lastDate = new Date(year, month + 1, 0).getDate();
+      var firstDay = new Date(year, month, 1).getDay();
+      var lastDate = new Date(year, month + 1, 0).getDate();
 
-      // 빈 칸 채우기
-      for (let i = 0; i < firstDay; i++) {
-        grid.innerHTML += `<div class="day-cell other-month"></div>`;
+      for (var i = 0; i < firstDay; i++) {
+        var emptyCell = document.createElement('div');
+        emptyCell.className = 'day-cell other-month';
+        grid.appendChild(emptyCell);
       }
 
-      // 날짜 채우기
-      for (let i = 1; i <= lastDate; i++) {
-        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        const dayPosts = postsMap[dateKey] || [];
-        const isToday = dateKey === todayStr ? 'today' : '';
-        
-        const cell = document.createElement('div');
-        cell.className = `day-cell ${isToday}`;
-        
-        // 점(Dot) 표시
-        let dotsHtml = '';
+      for (var d = 1; d <= lastDate; d++) {
+        var dateKey = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        var dayPosts = postsMap[dateKey] || [];
+        var isToday = dateKey === todayStr ? ' today' : '';
+
+        var cell = document.createElement('div');
+        cell.className = 'day-cell' + isToday;
+        cell.setAttribute('data-date', dateKey);
+
+        var dotsHtml = '';
         if (dayPosts.length > 0) {
-          dotsHtml = `<div class="dots-container">`;
-          dayPosts.slice(0, 6).forEach(p => {
-            const style = getAuthorStyle(p.author);
-            dotsHtml += `<div class="dot" style="background-color: ${style.color};" title="${style.name}"></div>`;
-          });
-          if (dayPosts.length > 6) {
-            dotsHtml += `<span class="more-badge">+${dayPosts.length - 6}</span>`;
+          dotsHtml = '<div class="dots-container">';
+          var showCount = Math.min(dayPosts.length, 6);
+          for (var j = 0; j < showCount; j++) {
+            var style = getAuthorStyle(dayPosts[j].author);
+            dotsHtml += '<div class="dot" style="background-color:' + style.color + ';"></div>';
           }
-          dotsHtml += `</div>`;
+          if (dayPosts.length > 6) {
+            dotsHtml += '<span class="more-badge">+' + (dayPosts.length - 6) + '</span>';
+          }
+          dotsHtml += '</div>';
         }
 
-        cell.innerHTML = `<span class="day-number">${i}</span>${dotsHtml}`;
-        cell.onclick = function() { selectDate(dateKey, this); };
+        cell.innerHTML = '<span class="day-number">' + d + '</span>' + dotsHtml;
+        (function(dk, c) {
+          c.onclick = function() { selectDate(dk, c); };
+        })(dateKey, cell);
         grid.appendChild(cell);
       }
     }
 
     function selectDate(date, element) {
-      const cells = grid.querySelectorAll('.day-cell');
-      cells.forEach(el => el.classList.remove('selected'));
+      var cells = grid.querySelectorAll('.day-cell');
+      for (var i = 0; i < cells.length; i++) {
+        cells[i].classList.remove('selected');
+      }
       if (element) element.classList.add('selected');
 
-      const [y, m, d] = date.split('-');
-      if (dateTitle) dateTitle.innerText = `${y}년 ${m}월 ${d}일 스케줄`;
+      var parts = date.split('-');
+      if (dateTitle) dateTitle.innerText = parts[0] + '년 ' + parts[1] + '월 ' + parts[2] + '일 스케줄';
 
-      const dayPosts = postsMap[date] || [];
-      
+      var dayPosts = postsMap[date] || [];
+
       if (!scheduleList) return;
 
       if (dayPosts.length === 0) {
-        scheduleList.innerHTML = `<div class="empty-message">작성된 게시물이 없습니다. 😴</div>`;
+        scheduleList.innerHTML = '<div class="empty-message">작성된 게시물이 없습니다. 😴</div>';
       } else {
-        let html = '';
-        dayPosts.forEach(post => {
-          const style = getAuthorStyle(post.author);
-          html += `
-            <a href="${post.url}" class="schedule-item">
-              <span class="author-badge" style="background-color: ${style.color};">
-                ${style.name}
-              </span>
-              <span class="post-title">${post.title}</span>
-            </a>
-          `;
+        var html = '';
+        dayPosts.forEach(function(post) {
+          var style = getAuthorStyle(post.author);
+          html += '<a href="' + post.url + '" class="schedule-item">' +
+            '<span class="author-badge" style="background-color:' + style.color + ';">' + style.name + '</span>' +
+            '<span class="post-title">' + post.title + '</span></a>';
         });
         scheduleList.innerHTML = html;
       }
@@ -453,18 +458,15 @@ permalink: /calendar/
     render();
   }
 
-  // 실행 (타이밍 이슈 방지)
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCalendarApp);
   } else {
     setTimeout(initCalendarApp, 100);
   }
 
-  // Hydejack 페이지 전환 시 재실행
-  const pushStateEl = document.getElementById('_pushState');
+  var pushStateEl = document.getElementById('_pushState');
   if (pushStateEl) {
     pushStateEl.addEventListener('hy-push-state-load', initCalendarApp);
   }
-
 })();
 </script>
