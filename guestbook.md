@@ -19,16 +19,23 @@ permalink: /guestbook/
 
 <div class="guestbook-form-section">
   <h3>✍️ 방명록 남기기</h3>
-  <p class="guestbook-note">GitHub 계정으로 로그인하여 방명록을 남겨주세요!</p>
+  <p class="guestbook-note">이름과 이메일을 입력하여 방명록을 남겨주세요!</p>
 </div>
 
-<script src="https://utteranc.es/client.js"
-        repo="team-bob-blog/bob_blog.github.io"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
+<div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+        this.page.url = '{{ page.url | absolute_url }}';
+        this.page.identifier = '{{ page.url }}';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://bob-blog-study.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
 </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
 <style>
 .guestbook-header {
@@ -89,7 +96,7 @@ permalink: /guestbook/
   margin: 0;
 }
 
-.utterances {
-  max-width: 100% !important;
+#disqus_thread {
+  margin-top: 20px;
 }
 </style>
