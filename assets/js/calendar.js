@@ -158,3 +158,24 @@ window.calendarPrevMonth = calendarPrevMonth;
 window.calendarNextMonth = calendarNextMonth;
 window.calendarGoToday = calendarGoToday;
 window.selectCalendarDate = selectCalendarDate;
+
+// 자동 실행: calendar-data 요소가 있으면 바로 초기화
+(function autoInit() {
+  function tryInit() {
+    var dataEl = document.getElementById('calendar-data');
+    if (dataEl) {
+      console.log('Calendar: Auto-init triggered');
+      initCalendar();
+    }
+  }
+  
+  // DOM 상태에 따라 실행
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryInit);
+  } else {
+    tryInit();
+  }
+  
+  // Hydejack push-state 지원
+  window.addEventListener('hy-push-state-after', tryInit);
+})();
