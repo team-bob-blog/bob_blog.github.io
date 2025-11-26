@@ -457,7 +457,20 @@ function calendarGoToday() {
   renderCalendar();
 }
 
-// 초기화
-initCalendarData();
-renderCalendar();
+// 초기화 함수
+function initCalendar() {
+  console.log('Calendar init called');
+  initCalendarData();
+  renderCalendar();
+}
+
+// DOM 로드 시 실행
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCalendar);
+} else {
+  initCalendar();
+}
+
+// Hydejack push-state 지원
+window.addEventListener('hy-push-state-load', initCalendar);
 </script>
