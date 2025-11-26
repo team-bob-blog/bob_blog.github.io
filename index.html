@@ -112,55 +112,70 @@ hide_description: true
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const grid = document.getElementById('post-grid');
-  const cards = Array.from(grid.querySelectorAll('.modern-post-card'));
-  const sortBtns = document.querySelectorAll('[data-sort]');
-  const authorBtns = document.querySelectorAll('[data-author]');
-  
-  let currentSort = 'newest';
-  let currentAuthor = 'all';
+(function() {
+  function initFilters() {
+    const grid = document.getElementById('post-grid');
+    if (!grid) return;
+    
+    const cards = Array.from(grid.querySelectorAll('.modern-post-card'));
+    const sortBtns = document.querySelectorAll('[data-sort]');
+    const authorBtns = document.querySelectorAll('[data-author]');
+    
+    let currentSort = 'newest';
+    let currentAuthor = 'all';
 
-  function filterAndSort() {
-    // Filter by author
-    cards.forEach(card => {
-      const author = card.dataset.author;
-      if (currentAuthor === 'all' || author === currentAuthor) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
+    function filterAndSort() {
+      cards.forEach(card => {
+        const author = card.dataset.author;
+        if (currentAuthor === 'all' || author === currentAuthor) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
+      visibleCards.sort((a, b) => {
+        const dateA = parseInt(a.dataset.date);
+        const dateB = parseInt(b.dataset.date);
+        return currentSort === 'newest' ? dateB - dateA : dateA - dateB;
+      });
+
+      visibleCards.forEach(card => grid.appendChild(card));
+      cards.filter(c => c.classList.contains('hidden')).forEach(card => grid.appendChild(card));
+    }
+
+    sortBtns.forEach(btn => {
+      btn.onclick = function() {
+        sortBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentSort = this.dataset.sort;
+        filterAndSort();
+      };
     });
 
-    // Sort
-    const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
-    visibleCards.sort((a, b) => {
-      const dateA = parseInt(a.dataset.date);
-      const dateB = parseInt(b.dataset.date);
-      return currentSort === 'newest' ? dateB - dateA : dateA - dateB;
+    authorBtns.forEach(btn => {
+      btn.onclick = function() {
+        authorBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentAuthor = this.dataset.author;
+        filterAndSort();
+      };
     });
-
-    // Reorder in DOM
-    visibleCards.forEach(card => grid.appendChild(card));
-    cards.filter(c => c.classList.contains('hidden')).forEach(card => grid.appendChild(card));
   }
 
-  sortBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      sortBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentSort = btn.dataset.sort;
-      filterAndSort();
-    });
-  });
-
-  authorBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      authorBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentAuthor = btn.dataset.author;
-      filterAndSort();
-    });
-  });
-});
+  // 즉시 실행
+  initFilters();
+  
+  // DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', initFilters);
+  
+  // Hydejack push-state 지원
+  if (window._pushState) {
+    document.addEventListener('hy-push-state-load', initFilters);
+  }
+  
+  // 추가 안전장치
+  setTimeout(initFilters, 500);
+})();
 </script>
