@@ -20,7 +20,7 @@
 lang:                  en
 
 # The title of your blog. Used in the sidebar and the browser tab.
-title:                 블로그 스터디()
+title:               구미 3반 최강 블로거
 
 # A short description (~150 chars) of the page used for the meta description tag.
 # Can use markdown, but no more than one paragraph (enforced by `>`)
@@ -29,7 +29,7 @@ description:           >
   with a focus on personal sites that are meant to impress.
 
 # A shorter description for the sidebar.
-tagline:                구미 3반 최강 블로거
+tagline:                블로그 스터디
 
 # A list of keywords for your blog
 keywords:              []
@@ -49,6 +49,8 @@ author:
 
 # Add links to the sidebar.
 menu:
+  - title:             Blog
+    url:               /blog/
   - title:             About Team
     url:               /about/
   - title:             개인별 게시물
@@ -76,7 +78,7 @@ permalink:             /:categories/:year-:month-:day-:title/
 # Pagination configuration (used by the `blog` layout)
 # Pagination 설정
 paginate: 10
-paginate_path: '/page:num/'
+paginate_path: '/blog/page:num/'
 
 # _config.yml
 data_dir: _data
