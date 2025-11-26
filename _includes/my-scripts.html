@@ -40,10 +40,25 @@
     });
   }
 
+  // 캘린더 초기화 함수
+  function initCalendarIfExists() {
+    if (typeof initCalendarData === 'function' && typeof renderCalendar === 'function') {
+      initCalendarData();
+      renderCalendar();
+    }
+  }
+
   // 초기 페이지 로드 시 실행
   initializePreviewLinks();
+  initCalendarIfExists();
 
   // Hydejack의 Push State 이벤트 리스너 등록
   // 페이지가 전환될 때마다 스크립트를 다시 초기화해야 함
-  document.getElementById('_pushState').addEventListener('hy-push-state-load', initializePreviewLinks);
+  var pushStateEl = document.getElementById('_pushState');
+  if (pushStateEl) {
+    pushStateEl.addEventListener('hy-push-state-load', function() {
+      initializePreviewLinks();
+      initCalendarIfExists();
+    });
+  }
 </script>
