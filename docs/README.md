@@ -2,19 +2,18 @@
 layout: page
 title: 개인별 게시물 목록
 description: >
-    팀원별 게시물 목록을 확인하고 해당 글로 이동할 수 있습니다. (10개씩 분리)
+    팀원별 게시물 목록을 확인하고 해당 글로 이동할 수 있습니다.
 hide_description: true
 sitemap: false
 permalink: /docs/
 ---
 
 <style>
-  /* Global Reset & Typography for this page */
+  /* Page specific styles */
   .docs-container {
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 
   .page-header {
@@ -29,7 +28,6 @@ permalink: /docs/
     font-weight: 700;
     color: #1a1a1a;
     margin-bottom: 10px;
-    letter-spacing: -0.5px;
   }
 
   .page-header p {
@@ -38,10 +36,8 @@ permalink: /docs/
     margin: 0;
   }
 
-  /* Author Section */
   .author-wrapper {
     margin-bottom: 80px;
-    animation: fadeIn 0.5s ease-in-out;
   }
 
   .author-profile {
@@ -92,96 +88,6 @@ permalink: /docs/
     vertical-align: middle;
   }
 
-  /* Posts Grid */
-  .author-posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-
-  .post-card {
-    display: flex;
-    flex-direction: column;
-    background: #ffffff;
-    border: 1px solid #f1f1f1;
-    border-radius: 12px;
-    padding: 24px;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    height: 100%;
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .post-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-    border-color: transparent;
-    text-decoration: none;
-  }
-
-  .post-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: #4a90e2;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .post-card:hover::before {
-    opacity: 1;
-  }
-
-  .post-card-title {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #2d3436;
-    margin: 0 0 12px 0;
-    line-height: 1.5;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .post-card:hover .post-card-title {
-    color: #4a90e2;
-  }
-
-  .post-card-meta {
-    margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    color: #b2bec3;
-  }
-
-  .post-date {
-    display: flex;
-    align-items: center;
-  }
-  
-  .post-date i { /* icon placeholder if needed */
-    margin-right: 5px;
-  }
-
-  .post-category {
-    background-color: #f8f9fa;
-    color: #636e72;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
   .no-posts {
     grid-column: 1 / -1;
     padding: 30px;
@@ -192,14 +98,8 @@ permalink: /docs/
     font-style: italic;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   @media (max-width: 768px) {
     .page-header h1 { font-size: 2rem; }
-    .author-posts-grid { grid-template-columns: 1fr; }
     .author-profile { flex-direction: column; align-items: flex-start; }
     .author-avatar { margin-bottom: 10px; }
   }
@@ -240,23 +140,23 @@ permalink: /docs/
           </div>
         </div>
 
-        <div class="author-posts-grid">
+        <div class="post-card-grid">
           {% if total_posts == 0 %}
             <div class="no-posts">
               아직 작성된 게시물이 없습니다.
             </div>
           {% else %}
             {% for post in posts_by_author limit: posts_limit %}
-              <a href="{{ post.url | relative_url }}" class="post-card">
-                <h3 class="post-card-title">{{ post.title }}</h3>
-                <div class="post-card-meta">
-                  <span class="post-date">{{ post.date | date: "%Y.%m.%d" }}</span>
+              <a href="{{ post.url | relative_url }}" class="modern-post-card">
+                <h3 class="modern-post-card-title">{{ post.title }}</h3>
+                <div class="modern-post-card-meta">
+                  <span class="modern-post-date">{{ post.date | date: "%Y.%m.%d" }}</span>
                   {% if post.categories.size > 0 %}
                     {% assign first_category = post.categories | first %}
                     {% if first_category == "example" and post.categories.size > 1 %}
                         {% assign first_category = post.categories[1] %}
                     {% endif %}
-                    <span class="post-category">{{ first_category }}</span>
+                    <span class="modern-post-category">{{ first_category }}</span>
                   {% endif %}
                 </div>
               </a>
