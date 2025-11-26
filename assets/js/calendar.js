@@ -176,6 +176,19 @@ window.selectCalendarDate = selectCalendarDate;
     tryInit();
   }
   
-  // Hydejack push-state 지원
-  window.addEventListener('hy-push-state-after', tryInit);
+  // Hydejack push-state 지원 - 여러 이벤트에 등록
+  var pushStateEl = document.getElementById('_pushState');
+  if (pushStateEl) {
+    pushStateEl.addEventListener('hy-push-state-load', function() {
+      setTimeout(tryInit, 50);
+    });
+    pushStateEl.addEventListener('hy-push-state-after', function() {
+      setTimeout(tryInit, 50);
+    });
+  }
+  
+  // window 이벤트로도 등록 (백업)
+  window.addEventListener('hy-push-state-after', function() {
+    setTimeout(tryInit, 50);
+  });
 })();
