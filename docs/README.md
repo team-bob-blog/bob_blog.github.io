@@ -2,271 +2,268 @@
 layout: page
 title: 개인별 게시물 목록
 description: >
-    팀원별 게시물 목록을 확인하고 해당 글로 이동할 수 있습니다.
+    팀원별 게시물 목록을 확인하고 해당 글로 이동할 수 있습니다. (10개씩 분리)
 hide_description: true
 sitemap: false
 permalink: /docs/
 ---
 
 <style>
-.docs-container {
-  max-width: 900px;
-  margin: 0 auto;
-}
+  /* Global Reset & Typography for this page */
+  .docs-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
 
-.docs-header {
-  text-align: center;
-  padding: 30px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  margin-bottom: 30px;
-  color: white;
-}
+  .page-header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eaeaea;
+  }
 
-.docs-header h1 {
-  font-size: 1.6rem;
-  margin: 0 0 10px 0;
-  color: white !important;
-}
+  .page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
 
-.docs-header p {
-  margin: 0;
-  opacity: 0.9;
-  font-size: 0.95rem;
-}
+  .page-header p {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+  }
 
-.author-section {
-  margin-bottom: 25px;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  background: #ffffff;
-  border: 1px solid #f0f0f0;
-}
+  /* Author Section */
+  .author-wrapper {
+    margin-bottom: 80px;
+    animation: fadeIn 0.5s ease-in-out;
+  }
 
-.author-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  cursor: pointer;
-  transition: background 0.2s;
-  border-bottom: 1px solid #f0f0f0;
-}
+  .author-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-left: 10px;
+  }
 
-.author-header:hover {
-  background: #fafafa;
-}
+  .author-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 18px;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+  }
 
-.author-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+  .author-details {
+    display: flex;
+    flex-direction: column;
+  }
 
-.author-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-}
+  .author-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3436;
+    margin: 0;
+    line-height: 1.2;
+  }
 
-.author-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
+  .author-meta {
+    font-size: 0.9rem;
+    color: #636e72;
+    margin-top: 4px;
+  }
 
-.post-count {
-  background: #e8f4fd;
-  color: #1a73e8;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
+  .post-count-badge {
+    background-color: #eef2f7;
+    color: #4a90e2;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
 
-.posts-container {
-  padding: 0;
-  max-height: 400px;
-  overflow-y: auto;
-}
+  /* Posts Grid */
+  .author-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
 
-.post-item {
-  display: flex;
-  align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid #f5f5f5;
-  transition: background 0.2s;
-  text-decoration: none !important;
-}
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #f1f1f1;
+    border-radius: 12px;
+    padding: 24px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+  }
 
-.post-item:last-child {
-  border-bottom: none;
-}
+  .post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border-color: transparent;
+    text-decoration: none;
+  }
 
-.post-item:hover {
-  background: #f8f9fa;
-}
+  .post-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: #4a90e2;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
 
-.post-date-badge {
-  min-width: 50px;
-  text-align: center;
-  margin-right: 15px;
-}
+  .post-card:hover::before {
+    opacity: 1;
+  }
 
-.post-date-badge .day {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #333;
-  line-height: 1;
-}
+  .post-card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #2d3436;
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 
-.post-date-badge .month {
-  font-size: 0.7rem;
-  color: #888;
-  text-transform: uppercase;
-}
+  .post-card:hover .post-card-title {
+    color: #4a90e2;
+  }
 
-.post-content {
-  flex: 1;
-  min-width: 0;
-}
+  .post-card-meta {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #b2bec3;
+  }
 
-.post-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #333 !important;
-  margin: 0 0 4px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .post-date {
+    display: flex;
+    align-items: center;
+  }
+  
+  .post-date i { /* icon placeholder if needed */
+    margin-right: 5px;
+  }
 
-.post-meta {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+  .post-category {
+    background-color: #f8f9fa;
+    color: #636e72;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 
-.post-category {
-  display: inline-block;
-  padding: 2px 8px;
-  background: #e8f4fd;
-  color: #1a73e8;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-}
+  .no-posts {
+    grid-column: 1 / -1;
+    padding: 30px;
+    text-align: center;
+    background: #f9f9f9;
+    border-radius: 12px;
+    color: #999;
+    font-style: italic;
+  }
 
-.post-tags {
-  color: #999;
-  font-size: 0.75rem;
-}
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-.no-posts {
-  padding: 30px;
-  text-align: center;
-  color: #999;
-  font-style: italic;
-}
-
-.view-more {
-  display: block;
-  text-align: center;
-  padding: 12px;
-  background: #f8f9fa;
-  color: #666;
-  font-size: 0.85rem;
-  text-decoration: none;
-  border-top: 1px solid #f0f0f0;
-}
-
-.view-more:hover {
-  background: #f0f0f0;
-  color: #333;
-}
-
-@media (max-width: 600px) {
-  .docs-header h1 { font-size: 1.3rem; }
-  .post-date-badge { display: none; }
-  .author-header { padding: 12px 15px; }
-  .post-item { padding: 12px 15px; }
-}
+  @media (max-width: 768px) {
+    .page-header h1 { font-size: 2rem; }
+    .author-posts-grid { grid-template-columns: 1fr; }
+    .author-profile { flex-direction: column; align-items: flex-start; }
+    .author-avatar { margin-bottom: 10px; }
+  }
 </style>
 
 <div class="docs-container">
-
-<div class="docs-header">
-  <h1>📚 팀원별 게시물</h1>
-  <p>각 팀원이 작성한 포스트를 한눈에 확인하세요</p>
-</div>
-
-{% assign team_members = site.data.authors %}
-{% assign posts_per_page = 10 %}
-
-{% for author_entry in team_members %}
-  {% assign author_shortname = author_entry[0] %}
-  {% assign author_info = author_entry[1] %}
-  {% assign author_korean_name = author_info.name %}
-  {% assign first_char = author_korean_name | slice: 0 %}
-
-  {% if author_korean_name %}
-    {% assign posts_by_author = site.posts | where: "author", author_shortname | sort: 'date' | reverse %}
-    {% assign total_posts = posts_by_author.size %}
-
-<div class="author-section">
-  <div class="author-header">
-    <div class="author-info">
-      <div class="author-avatar">{{ first_char }}</div>
-      <h3 class="author-name">{{ author_korean_name }}</h3>
-    </div>
-    <span class="post-count">{{ total_posts }}개</span>
+  <div class="page-header">
+    <h1>Individual Posts</h1>
+    <p>팀원들이 작성한 지식과 경험을 공유합니다.</p>
   </div>
 
-  <div class="posts-container">
-    {% if total_posts == 0 %}
-      <div class="no-posts">아직 작성된 게시물이 없습니다</div>
-    {% else %}
-      {% for post in posts_by_author limit: posts_per_page %}
-        <a href="{{ post.url | relative_url }}" class="post-item">
-          <div class="post-date-badge">
-            <div class="day">{{ post.date | date: "%d" }}</div>
-            <div class="month">{{ post.date | date: "%b" }}</div>
-          </div>
-          <div class="post-content">
-            <div class="post-title">{{ post.title }}</div>
-            <div class="post-meta">
-              {% for category in post.categories %}
-                {% unless category == "example" %}
-                  <span class="post-category">{{ category }}</span>
-                {% endunless %}
-              {% endfor %}
-              {% if post.tags.size > 0 %}
-                <span class="post-tags">#{{ post.tags | first }}</span>
-              {% endif %}
+  {% assign team_members = site.data.authors %}
+  {% assign posts_limit = 10 %}
+
+  {% for author_entry in team_members %}
+    {% assign author_shortname = author_entry[0] %}
+    {% assign author_info = author_entry[1] %}
+    {% assign author_korean_name = author_info.name %}
+    
+    {% if author_korean_name %}
+      {% assign posts_by_author = site.posts | where: "author", author_shortname | sort: 'date' | reverse %}
+      {% assign total_posts = posts_by_author.size %}
+      
+      <div class="author-wrapper">
+        <div class="author-profile">
+          <img src="{{ '/assets/img/profile/' | append: author_korean_name | append: '.png' | relative_url }}" 
+               alt="{{ author_korean_name }}" 
+               class="author-avatar"
+               onerror="this.src='{{ '/assets/img/profile/default.png' | relative_url }}'; this.onerror=null;">
+          <div class="author-details">
+            <h2 class="author-name">
+              {{ author_korean_name }}
+              <span class="post-count-badge">{{ total_posts }}</span>
+            </h2>
+            <div class="author-meta">
+               Latest posts
             </div>
           </div>
-        </a>
-      {% endfor %}
-      {% if total_posts > posts_per_page %}
-        <a href="{{ '/docs/authors/' | append: author_shortname | append: '/' | relative_url }}" class="view-more">
-          + {{ total_posts | minus: posts_per_page }}개 더보기
-        </a>
-      {% endif %}
+        </div>
+
+        <div class="author-posts-grid">
+          {% if total_posts == 0 %}
+            <div class="no-posts">
+              아직 작성된 게시물이 없습니다.
+            </div>
+          {% else %}
+            {% for post in posts_by_author limit: posts_limit %}
+              <a href="{{ post.url | relative_url }}" class="post-card">
+                <h3 class="post-card-title">{{ post.title }}</h3>
+                <div class="post-card-meta">
+                  <span class="post-date">{{ post.date | date: "%Y.%m.%d" }}</span>
+                  {% if post.categories.size > 0 %}
+                    {% assign first_category = post.categories | first %}
+                    {% if first_category == "example" and post.categories.size > 1 %}
+                        {% assign first_category = post.categories[1] %}
+                    {% endif %}
+                    <span class="post-category">{{ first_category }}</span>
+                  {% endif %}
+                </div>
+              </a>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
     {% endif %}
-  </div>
-</div>
-
-  {% endif %}
-{% endfor %}
-
+  {% endfor %}
 </div>
