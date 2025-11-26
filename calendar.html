@@ -303,6 +303,9 @@ permalink: /calendar/
 ]
 </script>
 
+<!-- 디버그: 포스트 개수 확인 -->
+<div id="post-debug" style="display:none;">총 포스트: {{ site.posts.size }}개</div>
+
 <script>
 var calendarData = [];
 var calendarPostsMap = {};
@@ -324,8 +327,14 @@ function getCalendarAuthorStyle(id) {
 function initCalendarData() {
   try {
     var dataEl = document.getElementById('calendar-data');
+    var debugEl = document.getElementById('post-debug');
+    console.log('Debug info:', debugEl ? debugEl.textContent : 'no debug');
+    
     if (dataEl) {
-      calendarData = JSON.parse(dataEl.textContent);
+      var rawText = dataEl.textContent.trim();
+      console.log('Raw data length:', rawText.length);
+      calendarData = JSON.parse(rawText);
+      console.log('Parsed posts:', calendarData.length);
       calendarPostsMap = {};
       calendarData.forEach(function(p) {
         if (!calendarPostsMap[p.date]) calendarPostsMap[p.date] = [];
