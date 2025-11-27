@@ -19,10 +19,11 @@ sitemap: false
   text-align: center;
   margin-bottom: 60px;
   padding: 60px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(to right, #000000, #EB5757); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ 
   border-radius: 20px;
   color: white;
-  box-shadow: 0 10px 30px rgba(118, 75, 162, 0.3);
+  /* 수정됨: 배경의 포인트 컬러(#EB5757)를 rgba(235, 87, 87, 0.4)로 변환하여 적용 */
+  box-shadow: 0 10px 30px rgba(235, 87, 87, 0.4);
   position: relative;
   overflow: hidden;
 }
