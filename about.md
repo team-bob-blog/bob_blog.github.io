@@ -8,6 +8,9 @@ sitemap: false
 ---
 
 <style>
+/* Pretendard 폰트 import */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
 /* About Page Specific Styles */
 .about-container {
   max-width: 1000px;
@@ -19,13 +22,16 @@ sitemap: false
   text-align: center;
   margin-bottom: 60px;
   padding: 60px 20px;
-  background: linear-gradient(to right, #000000, #EB5757); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ 
+  background: linear-gradient(to right, #000000, #EB5757);
   border-radius: 20px;
   color: white;
-  /* 수정됨: 배경의 포인트 컬러(#EB5757)를 rgba(235, 87, 87, 0.4)로 변환하여 적용 */
   box-shadow: 0 10px 30px rgba(235, 87, 87, 0.4);
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
 }
 
 .team-intro-section::before {
@@ -55,14 +61,19 @@ sitemap: false
   margin-bottom: 20px;
   color: white !important;
   text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  letter-spacing: -0.5px;
 }
 
 .team-intro-section p {
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: 1.15rem;
+  line-height: 2;
   opacity: 0.95;
   margin: 0 auto;
   max-width: 600px;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.3px;
 }
 
 .member-grid {
@@ -174,7 +185,7 @@ sitemap: false
 
 <div class="team-intro-section">
   <div class="team-intro-content">
-    <h2>🚀 구미 3반 블로그 스터디</h2>
+    <h2>구미 3반 블로그 스터디</h2>
     <p>
       우리는 함께 성장하는 개발자들입니다.<br>
       개인적인 CS 공부를 정리하고, 서로의 지식을 공유하며<br>
